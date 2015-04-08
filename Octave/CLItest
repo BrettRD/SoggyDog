@@ -1,0 +1,7 @@
+#! /usr/bin/octave -qf
+printf ("%s\n", program_name ());
+arg_list = argv ();
+for i = 1:nargin
+  printf (" %s\n", arg_list{i});
+endfor
+printf ("\n");

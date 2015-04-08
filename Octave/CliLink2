@@ -1,0 +1,42 @@
+#! /usr/bin/octave -qf
+printf ("%s\n", program_name ());
+arg_list = argv ();
+for i = 1:nargin
+  printf (" %s\n", arg_list{i});
+endfor
+
+%pkg load image
+
+%read the images
+file1 = 'IDR703.T.201407151230.png';
+%file2 = arg_list{2};
+
+%pic2 = imread(file2);
+
+pic1 = imread(file1);
+trim1(:,:,:) = pic1(17:496, 17:496, 1:3);
+m=[
+        0   0   0
+      245 245 255
+      180 180 255
+      120 120 255
+       20  20 255
+        0 216 195
+        0 150 144
+        0 102 102
+      255 255   0
+      255 200   0
+      255 150   0
+      255 100   0
+      255   0   0
+      200   0   0
+      120   0   0
+       40   0   0
+];
+ind1 = indexer(trim1, m);
+
+x = scalecrop(ind1, 1.5, [300,300], [-120,-120]);
+
+%rainProb = Predictor(pic1, pic2);
+
+imwrite(x/max(x(:)), ['cimageF6.png']);

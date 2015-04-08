@@ -1,0 +1,531 @@
+/* updated and validated on YYYYMMDD */
+/* These styles are subject to change without notice */
+/* These styles have been specifically created for use in Radar web pages only */
+/* AMDISS Systems */
+/* div id=overlay style is inline to cope with Safari and Opera */
+/*
+ * A simple in-line css reset to create a level playing filed for all versions of
+ * the radar viewer.
+ */
+table.viewer div,				table.viewer span,	table.viewer h2,		table.viewer h3,
+table.viewer h4,				table.viewer h5,		table.viewer h6,		table.viewer p,
+table.viewer blockquote,	table.viewer pre,		table.viewer a,		table.viewer abbr,
+table.viewer code,			table.viewer em,		table.viewer img,		table.viewer sub,
+table.viewer sup,				table.viewer dl,		table.viewer dt,		table.viewer dd,
+table.viewer ol,				table.viewer ul,		table.viewer li,		table.viewer fieldset,
+table.viewer form,			table.viewer label,	table.viewer legend,	table.viewer table,
+table.viewer caption,		table.viewer tbody,	table.viewer tfoot,	table.viewer thead,
+table.viewer tr,				table.viewer th,		table.viewer td{
+margin:0;
+padding:0;
+border:0;
+font-size:100%;
+font:inherit;
+vertical-align:baseline;
+}
+/*#content.defence-radar-inc table.viewer *,
+#content.defence-radar-inc table.viewer{
+font-size:.8em;
+}*/
+table.viewer ol,	table.viewer ul{
+list-style:none;
+}
+table.viewer,	table.viewer table{
+border-collapse:collapse;
+border-spacing:0;
+}
+/*
+ * END reset
+ * START table.viewer
+ */
+table.viewer{
+border:1px solid #D5D5E0;
+height:570px;
+overflow:hidden;
+padding-bottom:3em;
+table-layout:fixed;
+}
+table.viewer table{
+margin:0 auto;
+}
+/*table.viewer tr,*/
+/*table.viewer td,*/
+/*table.viewer th {*/
+/*overflow:hidden;*/
+/*
+ For some unknown reason this breaks the pointer data text boxes in Safari
+ v5.X or earlier.
+*/
+/*}*/
+table.viewer td,
+table.viewer th {
+vertical-align:top;
+}
+table.viewer td#overlayCell{
+overflow:hidden;
+width:512px;
+}
+table.viewer td.imagePanel{
+background-color:transparent;
+width:512px;
+height:557px;
+}
+table.viewer td fieldset{
+margin:.3em;
+}
+table.viewer td fieldset legend{
+color:#666;
+font-weight:700;
+margin-bottom:.3em;
+}
+table.viewer td.valign-middle{
+vertical-align:middle;
+}
+table.viewer input[type=button]{
+font-size:.86em;
+margin:2px 0;
+}
+table.viewer .align-left{
+text-align:left;
+}
+/* togglesPanel */
+table.viewer .togglesPanel{
+color:#222;
+/*text-align:center;*/
+}
+table.viewer .togglesPanel p{
+line-height:1.2em;
+padding:.1em;
+}
+table.viewer .togglesPanel input{
+vertical-align:middle !important;
+}
+table.viewer .togglesPanel form#tog table td.instructions{
+color:#222;
+background:#DDD;
+font-size:90%;
+padding:2px;
+}
+table.viewer .togglesPanel form#tog table td.label{
+font-size:90%;
+text-align:left;
+}
+/* Observations Table */
+/*table.viewer table.obstable,
+table.viewer #obs-instruct{
+width:100%;
+height:100px;
+}*/
+table.viewer table.obstable td#observationsView,
+table.viewer table.obstable td#observationsView table{
+border:none;
+margin:0;
+padding:0;
+}
+table.viewer table.obstable td#observationsView p {
+font-size:0.9em;
+font-weight:normal;
+padding:0 2em;
+}
+table.viewer table.obstable{
+width:100%;
+height:104px;
+white-space-collapse:collapse;
+}
+table.viewer table.obstable td,
+table.viewer table.obstable th{
+background-color:#FFF;
+border:1px solid #D5D5E0;
+font-size:0.9em !important;
+font-size:11px;
+font-weight:normal;
+padding:.2em;
+vertical-align:middle !important;
+}
+table.viewer table.obstable th{
+background:#F7F7F9;
+color:#222;
+}
+table.viewer table.obstable th.align-left{
+white-space:nowrap;
+}
+table.viewer table.obstable td{
+font-weight:700;
+font-size:1em;
+text-align:center;
+}
+table.viewer table.obstable th.marker{
+border:none;
+text-align:right;
+}
+table.viewer table.obstable th.label{
+border:none;
+text-align:left;
+}
+table.viewer table.obstable th.red,
+table.viewer table.obstable th.blue,
+table.viewer table.obstable th.green{
+color:#FFF;
+}
+table.viewer table.obstable th.red{
+background-color:#C00;
+border:1px solid #900;
+}
+table.viewer table.obstable th.blue{
+background-color:#36C;
+border:1px solid #06C;
+}
+table.viewer table.obstable th.green{
+background-color:#3C3;
+border:1px solid #393;
+}
+table.viewer table.obstable td.red{
+color:#C00;
+}
+table.viewer table.obstable td.blue{
+color:#36C;
+}
+table.viewer table.obstable td.green{
+color:#393;
+}
+table.viewer table.obstable div.red_legend,
+table.viewer table.obstable div.blue_legend,
+table.viewer table.obstable div.green_legend{
+border-width:1px;
+border-style:solid;
+width:20px;
+height:20px;
+float:right;
+}
+table.viewer table.obstable div.red_legend{
+background:#C00;
+border-color:#900;
+}
+table.viewer table.obstable div.blue_legend{
+background:#36C;
+border-color:#06C;
+}
+table.viewer table.obstable div.green_legend{
+background:#3C3;
+border-color:#393;
+}
+table.viewer div.info{
+background-color:#D5D5E0;
+color:#222;
+/*font-size:.8em !important;*/
+padding:3px;
+}
+/* Nearby Radar & Observation Links*/
+table.viewer .obslink,	table.viewer .radarlink0,
+table.viewer .radarlink1,	table.viewer .radarlink2{
+background:transparent;
+border:none;
+}
+table.viewer .obslink:hover{
+border:solid 1px #FFF;
+}
+table.viewer .radarlink0:hover{
+border:solid 2px #C30;
+}
+table.viewer .radarlink1:hover{
+border:solid 2px #06C;
+}
+table.viewer .radarlink2:hover{
+border:solid 2px #222;
+}
+table.viewer .border_item{
+background:#F7F7F9;
+border:1px #D5D5E0 solid;
+margin:2px;
+}
+table.viewer .radarLabel{
+background-color:#D5D5E0;
+color:#0f5499;
+display:block;
+/*font-size:12px;*/
+font-size:1em;
+font-weight:700;
+line-height:1.6em;
+padding-bottom:.3em;
+padding-left:.6em;
+text-align:left;
+}
+table.viewer a.disabled{
+color:#aca899;
+}
+table.viewer .border-left{
+border-left:1px solid #D5D5E0;
+}
+table.viewer .info{
+font-size:.86em;
+}
+table.viewer .loopcontrols{
+padding:.3em 0;
+}
+table.viewer #nearby-radars{
+margin-bottom:.3em;
+margin-top:.3em;
+}
+table.viewer #map-features{
+margin-bottom:.3em;
+margin-left:.3em;
+margin-top:.3em;
+}
+/* input[type=text] fields revert to 100% widthout an explicit size set in css */
+table.viewer #control_form input[type=text],
+table.viewer #pointer input[type=text],
+table.viewer #coordinates input[type=text],
+table.viewer #offsets input[type=text],
+table.viewer .info input[type=text]{
+background:#F7F7F9;
+border:1px solid #d5d5e0;
+font-size:.86em;
+}
+table.viewer .border_disabled{
+color:#B6ADAC;
+background-color:#E0E0E5;
+border:1px #DDD solid;
+margin:2px;
+}
+table.viewer .border_disabled p {
+color:#B6ADAC;
+/*background-color:#E0E0E5;*/
+}
+table.viewer .border_disabled #control_form input[type=text],
+table.viewer .border_disabled #pointer input[type=text],
+table.viewer .border_disabled #coordinates input[type=text],
+table.viewer .border_disabled #offsets input[type=text],
+table.viewer .border_disabled .info input[type=text]{
+background-color:#E0E0E5;
+border-style:solid;
+border-width:1px;
+border-color:#E5E5E5;
+}
+table.viewer #pointer p,
+table.viewer #coordinates p,
+table.viewer #pointer p input,
+table.viewer #coordinates p input,
+table.viewer #offsets p input{
+text-align:center;
+}
+table.viewer #coordinates p.radio-btn{
+font-size:.86em;
+text-align:left;
+}
+table.viewer #offsets p{
+padding-left:0.8em;
+}
+table.viewer td.border_disabled h3{
+font-size:1.6em;
+font-weight:700;
+padding-bottom:.6em;
+}
+table.viewer td.border_disabled{
+vertical-align:middle;
+}
+table.viewer #displayFrameNoLocalTime,
+table.viewer .loopcontrols{
+text-align:center;
+}
+/*
+ * END table.viewer
+ *
+ * START page specific table.viewer
+ *
+ */
+#content.defence-radar div.service-notice {
+background-color:#F5F5F5;
+border-color:#FBE983;
+border-style:solid;
+border-width:1px 1px 1px 8px;
+color:#333333;
+margin:0.5em 5px 1.5em 0;
+padding:1em;
+width:857px;
+}
+#content.registered-users-radar table.viewer .togglesPanel,
+#content.reg-radar table.viewer .togglesPanel,
+#content.defence-radar table.viewer .togglesPanel,
+#content.eval-radar table.viewer .togglesPanel,
+#content.air_service-radar table.viewer .togglesPanel{
+width:139px;
+}
+/*#content.public-radar table.viewer td#controls-col1.togglesPanel {*/
+#content.public-radar table.viewer td#controls-col1 {
+width:152px;
+}
+/*#content.public-radar table.viewer td#controls-col2.togglesPanel {*/
+#content.public-radar table.viewer td#controls-col2 {
+width:302px;
+}
+#content.public-radar table.viewer,
+#content.national-radar table.viewer{
+width:970px;
+table-layout:fixed;
+}
+#content.public-radar table.viewer #weather-obs {
+height:13.3em !important;
+/*height:159px;*/
+min-height:159px;
+overflow:hidden;
+position:relative;
+}
+#content.public-radar table.viewer #pointer-data {
+height:28.3em !important;
+/*height:366px;*/
+min-height:366px;
+overflow:hidden;
+position:relative;
+}
+#content.public-radar table.viewer #weather-obs .info,
+#content.public-radar table.viewer #pointer-data .info {
+bottom:0;
+height:auto;
+left:0;
+position:absolute;
+width:98%;
+}
+#content.air_service-radar table.viewer,
+#content.defence-radar table.viewer,
+#content.eval-radar table.viewer,
+#content.registered-users-radar table.viewer,
+#content.reg-radar table.viewer{
+width:893px;
+table-layout:fixed;
+}
+#content.defence-radar-inc table.viewer{
+width:514px;
+table-layout:fixed;
+}
+#content.air_service-radar table.viewer,
+#content.registered-users-radar table.viewer,
+#content.reg-radar table.viewer,
+#content.eval-radar table.viewer{
+margin: 0 auto;
+}
+#content.defence-radar table.viewer td#controls-col1,
+#content.defence-radar table.viewer td#controls-col2 {
+height:420px;
+width:182px;
+}
+#content.registered-users-radar table.viewer td#controls-col1,
+#content.registered-users-radar table.viewer td#controls-col2,
+#content.reg-radar table.viewer td#controls-col1,
+#content.reg-radar table.viewer td#controls-col2,
+#content.eval-radar table.viewer td#controls-col1,
+#content.eval-radar table.viewer td#controls-col2 {
+height:392px;
+width:190px;
+}
+#content.air_service-radar table.viewer td#controls-col1,
+#content.air_service-radar table.viewer td#controls-col2 {
+height:354px;
+width:190px;
+}
+#content.national-radar table.viewer td#controls-col1,
+#content.national-radar table.viewer td#controls-col2 {
+height:354px;
+}
+#content.national-radar table.viewer td#controls-col1 {
+width:139px;
+}
+#content.national-radar table.viewer td#controls-col1 #coordinates p,
+#content.national-radar table.viewer td#controls-col1 #offsets p{
+text-align:left;
+}
+#content.national-radar table.viewer td#controls-col1 #coordinates p > input[type=text]{
+display:block;
+margin:0 auto;
+}
+#content.national-radar table.viewer td#controls-col1 #offsets p {
+padding-left:1em;
+}
+#content.national-radar table.viewer td#controls-col2 {
+width:300px;
+}
+#content.defence-radar-inc table.viewer #control_form input[type=text],
+#content.defence-radar-inc table.viewer #pointer input[type=text],
+#content.defence-radar-inc table.viewer #coordinates input[type=text],
+#content.defence-radar-inc table.viewer #offsets input[type=text],
+#content.defence-radar-inc table.viewer .info input[type=text],
+#content.defence-radar table.viewer #control_form input[type=text],
+#content.defence-radar table.viewer #pointer input[type=text],
+#content.defence-radar table.viewer #coordinates input[type=text],
+#content.defence-radar table.viewer #offsets input[type=text],
+#content.defence-radar table.viewer .info input[type=text]{
+font-size:.78em;
+}
+/*
+ * END page specific table.viewer
+ *
+ * START global
+ *
+ */
+table.viewer td.border_disabled div.msg{
+border:1px solid #D5D5E0;
+text-align:center;
+width:881px;
+padding:5px;
+}
+table.viewer td.border_disabled div.msg2{
+text-align:center;
+margin:2em;
+padding:5px;
+}
+/*.greenBorder{*/
+/*padding:2px;*/
+/*border-width:1px;*/
+/*border-style:solid;*/
+/*border-color:#99cc66;*/
+/*}*/
+/*.grayBorder{*/
+/*padding:4px;*/
+/*border-width:1px;*/
+/*border-style:solid;*/
+/*border-color:#74abc8;*/
+/*}*/
+body>br{
+display:none;
+}
+h1{
+line-height:1.2em;
+margin:0.3em 0 0;
+}
+.advert{
+width:300px;
+height:250px;
+border:1px solid #D5D5E0;
+}
+br.ssi-error{
+display:none;
+}
+#displayRadarOutageMgs{
+/*font-size:85%;*/
+color:#0F5499;
+}
+td.border_disabled div.msg2 p.backup-msg {
+color:#005588;
+font-size: 1.2em;
+line-height: 1.6em;
+padding-top: 1em;
+}
+#displayFrameNoLocalTime{
+background:#78A;
+color:#FFE;
+display:block;
+/*font-family:monospace;*/
+font-size:1.1em;
+font-weight:900;
+line-height:1.4em;
+padding:.6em 0;
+text-wrap:none;
+}
+#content.defence-radar-inc #displayFrameNoLocalTime{
+display:block;
+font-size:1.1em;
+text-align:center;
+padding-bottom:0;
+}
+.align-center table {
+margin:0 auto;
+}

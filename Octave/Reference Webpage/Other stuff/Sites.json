@@ -1,0 +1,41 @@
+{
+	"sites":[
+		{	
+			"name": "Serpentine",
+			"lat":-32.3917,
+			"lon":115.8669,
+			"loops": [
+				{
+					"prefix":"IDR701",
+					"description": "64Km"    ,
+					"URL": "http://www.bom.gov.au/products/IDR701.loop.shtml",
+					"range":64 
+				},
+				{
+					"prefix":"IDR702",
+					"description": "128Km"   ,
+					"URL": "http://www.bom.gov.au/products/IDR702.loop.shtml",
+					"range":128
+				},
+				{
+					"prefix":"IDR703",
+					"description": "256Km"   ,
+					"URL": "http://www.bom.gov.au/products/IDR703.loop.shtml",
+					"range":256
+				},
+				{
+					"prefix":"IDR704",
+					"description": "512Km"   ,
+					"URL": "http://www.bom.gov.au/products/IDR704.loop.shtml",
+					"range":512
+				},
+				{
+					"prefix":"IDR70I",
+					"description": "Doppler" ,
+					"URL": "http://www.bom.gov.au/products/IDR70I.loop.shtml",
+					"range":128
+				}
+			]
+		}
+	]
+}

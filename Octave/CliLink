@@ -1,0 +1,25 @@
+#! /usr/bin/octave -qf
+printf ("%s\n", program_name ());
+arg_list = argv ();
+for i = 1:nargin
+  printf (" %s\n", arg_list{i});
+endfor
+
+pkg load image
+
+%read the images
+file1 = arg_list{1};
+file2 = arg_list{2};
+userlist = arg_list{3};
+
+
+pic1 = imread(file1);
+pic2 = imread(file2);
+users = load(userlist);
+
+rainProb = Predictor(pic1, pic2, users);
+numusers = size(users,1);
+for u = 1:numusers
+  userProb(:,:) = rainProb(:,:,u);
+  imwrite(userProb/max(userProb(:)), ['chart',int2str(users(u,1)),'.png']);
+end

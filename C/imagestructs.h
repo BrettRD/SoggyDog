@@ -1,33 +1,33 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef struct grey2D8u
+struct grey2D8u
 {
     int height;
     int width;
     uint8_t** row;
     //row[y] is the beginning of a row,
     //row[y][x] is a pixel
-}grey2D8u;
+};
 
-typedef struct grey2D8s
+struct grey2D8s
 {
     int height;
     int width;
     int8_t** row;
     //row[y] is the beginning of a row,
     //row[y][x] is a pixel
-}grey2D8s;
+};
 
 
-typedef struct grey2Dfl
+struct grey2Dfl
 {
     int height;
     int width;
     float** row;
     //row[y] is the beginning of a row,
     //row[y][x] is a pixel
-}grey2Dfl;
+};
 
 grey2D8u* allocate_grey2D8u(int height, int width);
 grey2D8s* allocate_grey2D8s(int height, int width);

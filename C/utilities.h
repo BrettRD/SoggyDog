@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-
+#include <math.h>
 
 #include <png.h>
 #include "imagestructs.h"

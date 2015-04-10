@@ -46,7 +46,7 @@ float dotProd(grey2D8s* imgA, grey2D8s* imgB, int offx, int offy){
         for(int x=0; x<width; x++){
             Ax = x+Aoffx;
             Bx = x+Boffx;
-            tmpRow[x] = imgA[Ay][Ax] * imgB[By][Bx];
+            tmpRow[x] = imgA->row[Ay][Ax] * imgB->row[By][Bx];
         }
         tmpCol[y] = sumfloats(tmpRow, width);
     }

@@ -1,6 +1,9 @@
 
 #include "utilities.h"
 
+
+
+
 //destructively sum an array of floats in a binary tree.
 //adding a number less than the current resolution makes rounding errors. this should help.
 //ideally, this would sum the numbers with smallest mantissaas first.
@@ -28,4 +31,16 @@ void PrewittY(grey2D8s* kernel){
 			kernel->row[x][y] = y-1;
 		}
 	}
+}
+
+
+//from the libPNG example
+void abort_(const char * s, ...)
+{
+        va_list args;
+        va_start(args, s);
+        vfprintf(stderr, s, args);
+        fprintf(stderr, "\n");
+        va_end(args);
+        abort();
 }

@@ -1,6 +1,6 @@
 #include "utilities.h"
 
-grey2Dfl* correlate(grey2D8s* imgA, grey2D8s* imgB,){
+grey2Dfl* correlate(grey2D8s* imgA, grey2D8s* imgB){
     //needs to produce floats, but will need to fork out the additions in a tree to maintain comparable sizes.
     //make an image of the correct size (width*2 -2, height*2-2)
     grey2Dfl* imgC = allocate_grey2Dfl(imgA->height + imgB->height -2, imgA->width + imgB->width -2);
@@ -18,7 +18,7 @@ grey2Dfl* correlate(grey2D8s* imgA, grey2D8s* imgB,){
 
 
 // equivalent to octave's filter2 with 'valid'
-grey2D8s* derivative(grey2D8u* img, grey2D8s* kernel){
+grey2D8s* derivative(grey2D8s* img, grey2D8s* kernel){
 
     grey2D8s* imgC = allocate_grey2D8s(img->height - kernel->height +1, img->width - kernel->width +1);
     imgC->height = img->height - kernel->height +1;

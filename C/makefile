@@ -2,8 +2,8 @@
 
 all: SoggyDog
 
-SoggyDog: imagestructs.o dotproduct.o correlate.o utilities.o main.o
-	g++ main.o imagestructs.o dotproduct.o correlate.o utilities.o -o SoggyDog
+SoggyDog: indexer.o imagestructs.o dotproduct.o correlate.o utilities.o main.o
+	g++ -lpng main.o indexer.o imagestructs.o dotproduct.o correlate.o utilities.o -o SoggyDog
 
 main.o: main.cpp
 	g++ -c main.cpp
@@ -19,6 +19,9 @@ correlate.o: correlate.cpp
 
 utilities.o: utilities.cpp
 	g++ -c utilities.cpp
+
+indexer.o: indexer.cpp
+	g++ -c indexer.cpp
 
 clean:
 	rm *o SoggyDog

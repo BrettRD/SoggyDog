@@ -15,6 +15,17 @@ float sumfloats(float* data, int num){
     }
 }
 
+//This should beat the precision of Kahan Summation, but take nlog(n) to do it.
+float heapsum(float* data, int num){
+    //generate a heap (smallest at the top),
+    //Sum the root into the smaller of the first children
+    //move the last element to the root and heapify.
+    //rinse and repeat
+
+}
+
+
+
 //quick and dirty prewitt, only handles 3x3 kernels
 //I've used much larger kernels in the past, FIX ME.
 void PrewittX(grey2D8s* kernel){

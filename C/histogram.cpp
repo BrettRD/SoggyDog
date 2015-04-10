@@ -83,10 +83,12 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
         	///*
 			int bin = binimg->row[By][Bx];	//the colour we're looking at.
         	if((bin<0) || (bin>=nColours)) abort_("histogram encountered a colour not associated with a bin.");
-        	bins[bin+1][0] = greyimg->row[Ay][Ax];	//the end of the correct bin = start of the next
-        	for(int i=bin+1; i<nColours+1; i++){
-        		bins[i] = &bins[i][1];
-        	}
+            for(int i=nColours; i>=bin+1; i--){
+                bins[i][0] = bin[i-1][0];   //rotate the data forward
+                bins[i] = &bins[i][1];
+            }
+            bins[bin][0] = greyimg->row[Ay][Ax];	//the end of the correct bin = start of the next
+            
        	    binsize[bin]++;	//so we can tell how many to sum later
 
 			//*/

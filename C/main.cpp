@@ -39,47 +39,66 @@ int main(int argc, char **argv)
 
     //index the colours
     //values 0-15
+    printf("Indexing colours\n");
     grey2D8s* newMap = index_colours(argv[1]);
     grey2D8s* oldMap = index_colours(argv[2]);
-    
+
+    printf("Preparing a derivative kernel\n");
     //calculate the X and Y derivatives of the image
     //values 0-15 * kernel must not exceed +-127
     grey2D8s* kernel = allocate_grey2D8s(3,3);
 
+    printf("Calculating X derivatives\n");
     PrewittX(kernel);
     grey2D8s* newDx = derivative(newMap, kernel);
     grey2D8s* oldDx = derivative(oldMap, kernel);
 
     //4*width*height* [0-64]*[0-64] = 2^32
-    grey2Dfl* flowx = correlate(newDx, oldDx);
+    printf("Correlating X derivatives\n");
+    grey2D32s* flowx = correlate(newDx, oldDx);
+    printf("Dropping X derivatives\n");
     freeImage(newDx);
     freeImage(oldDx);
 
+    printf("Calculating Y derivatives\n");
     PrewittY(kernel);
     grey2D8s* newDy = derivative(newMap, kernel);
     grey2D8s* oldDy = derivative(oldMap, kernel);
 
-    grey2Dfl* flowy = correlate(newDy, oldDy);
+    printf("Correlating Y derivatives\n");
+    grey2D32s* flowy = correlate(newDy, oldDy);
     freeImage(newDy);
     freeImage(oldDy);
     freeImage(kernel);
 
+    printf("Combining derivatives\n");
     //this is not an accurate probability map:
-    grey2Dfl* flow = multiplyImages(squareImage(flowy), squareImage(flowx));
+    grey2D32s* flow = multiplyImages(squareImage(flowy), squareImage(flowx));
+    printf("Dropping Correlations\n");
     freeImage(flowy);
     freeImage(flowx);
 
-
+    printf("Preparing a histogram\n");
     grey2D8u* histo = allocate_grey2D8u(steps, nColours);
     
     grey2Dfl* scaledFlow;
     float scale;
-    for(int t=0; t<steps;t++){
+    for(int t=1; t<steps;t++){
         scale = t/((float) period);
+
+        printf("Scaling flow map by %f\n", scale);
         grey2Dfl* scaledFlow = scaleImage(flow, scale);
 
-        histogram(scaledFlow, newMap, userX, userY, histo->row[t]);
+        printf("Calculating histogram\n");
+        uint8_t* histoRow = histo->row[t];
+        histogram(scaledFlow, newMap, userX, userY, histoRow);
         //histograms
+        //for (int i = 0; i < nColours; ++i)
+        //{
+        //    printf(" %f,", histoRow[i]);
+        //}
+        //printf("\n");
+
 
         freeImage(scaledFlow);
     }

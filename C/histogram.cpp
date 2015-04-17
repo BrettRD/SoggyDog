@@ -57,17 +57,20 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
     	tmpCol[i] = (float*) malloc(sizeof(float) * height);
     }
 
-
-
-
 	float tmpRow[width];
     float* bins[nColours+1] = {tmpRow};
-    int binsize[nColours] = {0};
-	int colbinsize[nColours] = {0};
+    int binsize[nColours+1] = {0};
+    int colbinsize[nColours] = {0};
 
     for(int y=0;y<height; y++){
         Ay = y+Aoffy;
         By = y+Boffy;
+        //reset the bins
+        for(int i=0; i<(nColours+1);i++){
+            binsize[i] = 0;
+            bins[i] = tmpRow;
+        }
+
         for(int x=0; x<width; x++){
             Ax = x+Aoffx;
             Bx = x+Boffx;
@@ -82,16 +85,30 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
         	//this could actually be performed into a single array of size width, kind of like an insertion sort.
         	///*
 			int bin = binimg->row[By][Bx];	//the colour we're looking at.
-        	if((bin<0) || (bin>=nColours)) abort_("histogram encountered a colour not associated with a bin.");
+        	if((bin<0) || (bin>=nColours)){
+                printf("WTF is colour %d?\n", bin);
+                abort_("histogram encountered a colour not associated with a bin.");
+            }
+            //printf("insert, rotate %d\n", bin);
             for(int i=nColours; i>=bin+1; i--){
-                bins[i][0] = bin[i-1][0];   //rotate the data forward
+                bins[i][0] = bins[i-1][0];   //rotate the data forward
                 bins[i] = &bins[i][1];
             }
             bins[bin][0] = greyimg->row[Ay][Ax];	//the end of the correct bin = start of the next
-            
+
        	    binsize[bin]++;	//so we can tell how many to sum later
 
-			//*/
+            /*//print the contents of the bins
+            for (int tcols = 0; tcols < nColours; ++tcols)
+            {
+                printf("x=%d, y=%d, bin %d has:", x, y, tcols);
+                for (int binele = 0; binele < binsize[tcols]; ++binele)
+                {
+                    printf(" %f,", bins[tcols][binele]);
+                }
+                printf("\n");
+            }
+            */
 
         }
         /*

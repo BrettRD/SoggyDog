@@ -1,107 +1,96 @@
 /*
- * Copyright 2002-2011 Guillaume Cottenceau and contributors.
+ * A simple libpng example program
+ * http://zarb.org/~gc/html/libpng.html
+ *
+ * Modified by Yoshimasa Niwa to make it much simpler
+ * and support all defined color_type.
+ *
+ * To build, use the next instruction on OS X.
+ * $ brew install libpng
+ * $ clang -lz -lpng15 libpng_test.c
+ *
+ * Copyright 2002-2010 Guillaume Cottenceau.
  *
  * This software may be freely redistributed under the terms
  * of the X11 license.
  *
  */
+
+/*
+*further modified, shoehorned in as an indexer.
+*/
+
 #include "utilities.h"
-
-
+#include <png.h>
 // the radar images from bom.gov.au come with a 16px banner that must be trimmed
-
-
-// the radar images from bom.gov.au come with a 16px banner that must be trimmed
-
-
 //a colour map for the intensity colour chart
-
-
-
-
 
 
 grey2D8s* index_colours(char* file_name){
 
     // read file (lifted from libpng-short-example.c  Copyright 2002-2011 Guillaume Cottenceau and contributors, X11 license)
-    int x, y;
+    printf("Reading File %s\n", file_name);
     
-    int width, height, rowbytes;
+    int width, height;
     png_byte color_type;
     png_byte bit_depth;
-    
-    png_structp png_ptr;
-    png_infop info_ptr;
-    int number_of_passes;
-    png_bytep * row_pointers;
+    png_bytep *row_pointers;
 
-    unsigned char header[8];    // 8 is the maximum size that can be checked
-
-    /* open file and test for it being a png */
     FILE *fp = fopen(file_name, "rb");
-    if (!fp){
-        abort_("[read_png_file] File %s could not be opened for reading", file_name);
+  
+    png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if(!png) abort();
+  
+    png_infop info = png_create_info_struct(png);
+    if(!info) abort();
+  
+    if(setjmp(png_jmpbuf(png))) abort();
+  
+    png_init_io(png, fp);
+  
+    png_read_info(png, info);
+  
+    width      = png_get_image_width(png, info);
+    height     = png_get_image_height(png, info);
+    color_type = png_get_color_type(png, info);
+    bit_depth  = png_get_bit_depth(png, info);
+  
+    // Read any color_type into 8bit depth, RGBA format.
+    // See http://www.libpng.org/pub/png/libpng-manual.txt
+  
+    if(bit_depth == 16)
+      png_set_strip_16(png);
+  
+    if(color_type == PNG_COLOR_TYPE_PALETTE)
+      png_set_palette_to_rgb(png);
+  
+    // PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
+    if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+      png_set_expand_gray_1_2_4_to_8(png);
+  
+    if(png_get_valid(png, info, PNG_INFO_tRNS))
+      png_set_tRNS_to_alpha(png);
+  
+    // These color_type don't have an alpha channel then fill it with 0xff.
+    if(color_type == PNG_COLOR_TYPE_RGB ||
+       color_type == PNG_COLOR_TYPE_GRAY ||
+       color_type == PNG_COLOR_TYPE_PALETTE)
+      png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
+  
+    if(color_type == PNG_COLOR_TYPE_GRAY ||
+       color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+      png_set_gray_to_rgb(png);
+  
+    png_read_update_info(png, info);
+  
+    row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+    for(int y = 0; y < height; y++) {
+      row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png,info));
     }
-    fread(header, 1, 8, fp);
-    if (png_sig_cmp(header, 0, 8)){
-        abort_("[read_png_file] File %s is not recognized as a PNG file", file_name);
-    }
-
-    /* initialize stuff */
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if (!png_ptr){
-        abort_("[read_png_file] png_create_read_struct failed");
-    }
-    info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr){
-        abort_("[read_png_file] png_create_info_struct failed");
-    }
-    if (setjmp(png_jmpbuf(png_ptr))){
-        abort_("[read_png_file] Error during init_io");
-    }
-
-    png_init_io(png_ptr, fp);
-    png_set_sig_bytes(png_ptr, 8);
-    png_read_info(png_ptr, info_ptr);
-    width = png_get_image_width(png_ptr, info_ptr);
-    height = png_get_image_height(png_ptr, info_ptr);
-    color_type = png_get_color_type(png_ptr, info_ptr);
-    bit_depth = png_get_bit_depth(png_ptr, info_ptr);
-
-    number_of_passes = png_set_interlace_handling(png_ptr);
-    png_read_update_info(png_ptr, info_ptr);
-
-    /* read file */
-    if (setjmp(png_jmpbuf(png_ptr))){
-        abort_("[read_png_file] Error during read_image");
-    }
-
-    row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
-
-    if (bit_depth == 16){
-        rowbytes = width*8;
-    }
-    else{
-        rowbytes = width*4;
-    }
-
-    for (y=0; y<height; y++){
-        row_pointers[y] = (png_byte*) malloc(rowbytes);
-    }
-
-    png_read_image(png_ptr, row_pointers);
-
+  
+    png_read_image(png, row_pointers);
+  
     fclose(fp);
-
-
-    /* Expand any grayscale, RGB, or palette images to RGBA */
-    png_set_expand(png_ptr);
-
-    /* Reduce any 16-bits-per-sample images to 8-bits-per-sample */
-    png_set_strip_16(png_ptr);
-
-
-
 
 
 // index colours (cropping as we go)
@@ -110,34 +99,92 @@ grey2D8s* index_colours(char* file_name){
 
     //create the greyscale image
     grey2D8s* indx = allocate_grey2D8s(height-(2*cropBorder), width-(2*cropBorder));
+    if(indx == NULL) abort_("Indexer could not image");
 
-    for (int y=0; y<height-(2*cropBorder); y++) {
-        png_byte* row = row_pointers[y + cropBorder];
+    for (int y=0; y<(height-(2*cropBorder)); y++) {
+        png_bytep row = row_pointers[y + cropBorder];
 
         for (int x=0; x<width-(2*cropBorder); x++) {
-            png_byte* ptr = &( row[(x+cropBorder)*4] );
-            //printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n", x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+            png_bytep px = &( row[(x+cropBorder)*4] );
+            //printf("Pixel at position [ %d - %d ] has RGBA values: %d, %d, %d, %d\n", x, y, px[0], px[1], px[2], px[3]);
 
             //if the pixel is fully transparent, set it to black
-            if(ptr[3] == 0) {
-                ptr[0] = 0;
-                ptr[1] = 0;
-                ptr[2] = 0;
+            if(px[3] == 0) {
+                px[0] = 0;
+                px[1] = 0;
+                px[2] = 0;
             }
 
             //loop through the colours in the map, compare them to the colour map
             for (int colour=0; colour<nColours; colour++){
-                const uint8_t* map_pix = &colour_map[3 * colour];
+                indx->row[y][x] = nColours; //out of bounds
+                const uint8_t* map_pix = &(colour_map[3 * colour]);
                 //XXX use a typecast from uint8_t* to uint64_t and do the comparison in a single op
-                if( (ptr[0]== map_pix[0]) &&
-                    (ptr[1]== map_pix[1]) &&
-                    (ptr[2]== map_pix[2]) ){
+                if( (px[0]== map_pix[0]) &&
+                    (px[1]== map_pix[1]) &&
+                    (px[2]== map_pix[2]) ){
                     indx->row[y][x] = colour;
                     break;  //end on the first colour match, most pixels will be transparent.
                 }
+
+            }
+            if(indx->row[y][x] == nColours){
+                printf("Unknown colour: rgb= %d, %d, %d at %d, %d\n", px[0], px[1], px[2], x, y);
+                abort_("Indexer could not match a colour");
             }
         }
     }
+    for(int y = 0; y < height; y++) {
+        free(row_pointers[y]);
+    }
+    free(row_pointers);
+
+  
+
     return indx;
 }
 
+/*
+void write_png_file(char *filename) {
+  int y;
+
+  FILE *fp = fopen(filename, "wb");
+  if(!fp) abort();
+
+  png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  if (!png) abort();
+
+  png_infop info = png_create_info_struct(png);
+  if (!info) abort();
+
+  if (setjmp(png_jmpbuf(png))) abort();
+
+  png_init_io(png, fp);
+
+  // Output is 8bit depth, RGBA format.
+  png_set_IHDR(
+    png,
+    info,
+    width, height,
+    8,
+    PNG_COLOR_TYPE_RGBA,
+    PNG_INTERLACE_NONE,
+    PNG_COMPRESSION_TYPE_DEFAULT,
+    PNG_FILTER_TYPE_DEFAULT
+  );
+  png_write_info(png, info);
+
+  // To remove the alpha channel for PNG_COLOR_TYPE_RGB format,
+  // Use png_set_filler().
+  //png_set_filler(png, 0, PNG_FILLER_AFTER);
+
+  png_write_image(png, row_pointers);
+  png_write_end(png, NULL);
+
+  for(int y = 0; y < height; y++) {
+    free(row_pointers[y]);
+  }
+  free(row_pointers);
+
+  fclose(fp);
+}*/

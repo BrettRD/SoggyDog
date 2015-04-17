@@ -5,14 +5,14 @@
 #include <stdarg.h>
 #include <math.h>
 
-#include <png.h>
+
 #include "imagestructs.h"
 #include "indexer.h"
 
 
 
-grey2Dfl* correlate(grey2D8s* imgA, grey2D8s* imgB);
-float dotProd(grey2D8s* imgA, grey2D8s* imgB, int offx, int offy);
+grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB);
+int32_t dotProd(grey2D8s* imgA, grey2D8s* imgB, int offx, int offy);
 float sumfloats(float* data, int num);
 
 void PrewittX(grey2D8s* kernel);
@@ -24,13 +24,13 @@ grey2D8s* derivative(grey2D8s* img, grey2D8s* kernel);
 void histogram(grey2Dfl* scaledFlow, grey2D8s* newMap, int x, int y, uint8_t* bins);
 
 //squares every element of an image, (in place operation)
-grey2Dfl* squareImage(grey2Dfl* img);
+grey2D32s* squareImage(grey2D32s* img);
 
 //element by element multipication of two images
-grey2Dfl* multiplyImages(grey2Dfl* imgA, grey2Dfl* imgB);
+grey2D32s* multiplyImages(grey2D32s* imgA, grey2D32s* imgB);
 
 //scale an image (linear interpolation)
-grey2Dfl* scaleImage(grey2Dfl* flow, float scale);
+grey2Dfl* scaleImage(grey2D32s* flow, float scale);
 
 //from the libPNG example
 void abort_(const char * s, ...);

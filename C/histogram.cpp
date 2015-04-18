@@ -57,7 +57,7 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
     	tmpCol[i] = (float*) malloc(sizeof(float) * height);
     }
 
-	float tmpRow[width];
+    float tmpRow[width];
     float* bins[nColours+1] = {tmpRow};
     int binsize[nColours+1] = {0};
     int colbinsize[nColours] = {0};
@@ -98,7 +98,7 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
 
        	    binsize[bin]++;	//so we can tell how many to sum later
 
-            /*//print the contents of the bins
+            //print the contents of the bins
             for (int tcols = 0; tcols < nColours; ++tcols)
             {
                 printf("x=%d, y=%d, bin %d has:", x, y, tcols);
@@ -108,7 +108,6 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
                 }
                 printf("\n");
             }
-            */
 
         }
         /*
@@ -125,7 +124,7 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
 
     }
 	for(int bin=0;bin<nColours;bin++){
-    	outBins[bin] = sumfloats(tmpCol[bin], colbinsize[bin]);
+    	outBins[bin] = 255*sumfloats(tmpCol[bin], colbinsize[bin]);
     	//free(tmpRow[bin]);
     	free(tmpCol[bin]);
     }

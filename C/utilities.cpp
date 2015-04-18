@@ -4,15 +4,20 @@
 
 
 
-//destructively sum an array of floats in a binary tree.
+
+
+//sum an array of floats in a binary tree.
 //adding a number less than the current resolution makes rounding errors. this should help.
 //ideally, this would sum the numbers with smallest mantissaas first.
 float sumfloats(float* data, int num){
+    float tmpCopy[num];
+    memcpy(tmpCopy, data, sizeof(float)*num);
     for(int d=1; d<num; d*=2){
         for(int i=0; i+d<num; i+=2*d){
-            data[i] += data[i+d];
+            tmpCopy[i] += tmpCopy[i+d];
         }
     }
+    return tmpCopy[0];
 }
 
 //This should beat the precision of Kahan Summation, but take nlog(n) to do it.
@@ -22,6 +27,15 @@ float heapsum(float* data, int num){
     //move the last element to the root and heapify.
     //rinse and repeat
 
+}
+
+//Sum all the elements in an image (used to normalize a probablitity map)
+float sumImage(grey2Dfl* img){
+    float tmpcolumn[img->height];
+    for(int y=0; y < img->height; y++){
+        tmpcolumn[y] = sumfloats(img->row[y], img->width);
+    }
+    return sumfloats(tmpcolumn, img->height);
 }
 
 
@@ -61,25 +75,24 @@ grey2D32s* squareImage(grey2D32s* img){
     printf("Square an image\n");
     for(int x=0; x< img->width; x++){
         for(int y=0; y< img->height; y++){
-            //yay magic numbers!
-            img->row[y][x] = ((int64_t)img->row[y][x] * (int64_t)img->row[y][x])>>32;
+            //this needs to become floats, or I need a 128 bit processor
+            img->row[y][x] = img->row[y][x] * img->row[y][x];
         }
     }
     return img;
 }
 
 //element by element multipication of two images
-grey2D32s* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
+grey2Dfl* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
     printf("Multiply some images\n");
     if((imgA->height != imgB->height) || (imgA->width != imgB->width) ){
         abort_("Error: attempting to multiply elements of different sized images");
     }
-    grey2D32s* imgC = allocate_grey2D32s(imgA->height, imgA->width);
+    grey2Dfl* imgC = allocate_grey2Dfl(imgA->height, imgA->width);
 
     for(int y=0; y< imgC->height; y++){
         for(int x=0; x< imgC->width; x++){
-            //yay magic numbers!
-            imgC->row[y][x] = ((int64_t)imgA->row[y][x] * (int64_t)imgB->row[y][x])>>32;
+            imgC->row[y][x] = (float)imgA->row[y][x] * (float)imgB->row[y][x];
         }
     }
     return imgC;
@@ -89,7 +102,7 @@ grey2D32s* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
 //scale an image (linear interpolation)
 //it may be worth adding arguments to crop the final scaled image to a given maximum size.
 //I may also apply a shift to centre the image to improve symmetry
-grey2Dfl* scaleImage(grey2D32s* flow, float scale){
+grey2Dfl* scaleImage(grey2Dfl* flow, float scale){
     int height = floor((flow->height-1) * scale);
     int width = floor((flow->width-1) * scale);
 

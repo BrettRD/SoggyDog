@@ -98,6 +98,16 @@ int writeImage(const char* filename, grey2D8u* img)
 
 	return code;
 }
+int printHistogram(const char* name, grey2D8u* img){
+	grey2D8u* flatmap;
+    grey2D8u* printable;
+    //flatmap = flatten(img);    //convert to 8bit
+    printable = rescale(img, 16, -128);     //enhance the contrast
+    freeImage(flatmap);
+    int retval = writeImage(name, printable);
+    freeImage(printable);
+    return retval;
+}
 
 
 
@@ -107,8 +117,9 @@ int printIndexed(const char* name, grey2D8s* img){
     flatmap = flatten(img);    //convert to 8bit
     printable = rescale(flatmap, 16, -128);     //enhance the contrast
     freeImage(flatmap);
-    writeImage(name, printable);
+    int retval = writeImage(name, printable);
     freeImage(printable);
+    return retval;
 }
 
 int printDerivative(const char* name, grey2D8s* img){
@@ -118,8 +129,9 @@ int printDerivative(const char* name, grey2D8s* img){
     flatmap = flatten(img);    //convert to 8bit
     printable = rescale(flatmap, 1.5, -64);     //enhance the contrast
     freeImage(flatmap);
-    writeImage(name, printable);
+    int retval = writeImage(name, printable);
     freeImage(printable);
+    return retval;
 }
 
 int printFlow(const char* name, grey2D32s* img){
@@ -138,6 +150,29 @@ int printFlow(const char* name, grey2D32s* img){
     
     printable = flatten(enhanced);    //convert to 8bit
     freeImage(enhanced);
-    writeImage(name, printable);
+    int retval = writeImage(name, printable);
     freeImage(printable);
+    return retval;
+}
+
+int printFlow(const char* name, grey2Dfl* img){
+	grey2D8u* flatmap;
+    grey2D8u* printable;
+    grey2Dfl* enhanced;
+    float top = max(img);
+    float tail = min(img);
+    printf("Flow extrema are: %f, %f\n", top, tail);
+    //get the range between 0-1
+    float mult = 1.0 / (float)(top - tail);
+    float offset = -tail;
+    printf("begin image rescale\n");
+    
+    enhanced = rescale(img, mult, offset);     //enhance the contrast
+    //printf("Flow extrema are: %d, %d\n", max(enhanced), min(enhanced));
+    
+    printable = flatten(enhanced);    //convert to 8bit
+    freeImage(enhanced);
+    int retval = writeImage(name, printable);
+    freeImage(printable);
+    return retval;
 }

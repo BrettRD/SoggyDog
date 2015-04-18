@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 
     printf("Combining derivatives\n");
     //this is not an accurate probability map:
-    grey2D32s* flow = multiplyImages(squareImage(flowy), squareImage(flowx));
+    grey2Dfl* flow = multiplyImages(squareImage(flowy), squareImage(flowx));
     printf("Dropping Correlations\n");
     freeImage(flowy);
     freeImage(flowx);
@@ -105,6 +105,7 @@ int main(int argc, char **argv)
     grey2D8u* histo = allocate_grey2D8u(steps, nColours);
     
     grey2Dfl* scaledFlow;
+    grey2Dfl* normalizedflow;
     float scale;
     for(int t=1; t<steps;t++){
         scale = t/((float) period);
@@ -112,9 +113,17 @@ int main(int argc, char **argv)
         printf("Scaling flow map by %f\n", scale);
         grey2Dfl* scaledFlow = scaleImage(flow, scale);
 
+        //the flow map is a stand-in for a probablility distribution
+        float scaleFactor = sumImage(scaledFlow);
+        printf("normalizing flow map by %f\n", scaleFactor);
+        normalizedflow = rescale(scaledFlow, 1.0/scaleFactor, 0);
+        freeImage(scaledFlow);
+        printf("normalized map integrates to %f\n", sumImage(normalizedflow));
+        
         printf("Calculating histogram\n");
         uint8_t* histoRow = histo->row[t];
-        histogram(scaledFlow, newMap, userX, userY, histoRow);
+        histogram(normalizedflow, newMap, userX, userY, histoRow);
+        freeImage(normalizedflow);
         //histograms
         for (int i = 0; i < nColours; ++i)
         {
@@ -123,7 +132,6 @@ int main(int argc, char **argv)
         printf("\n");
 
 
-        freeImage(scaledFlow);
     }
 
     //write_png_file(argv[2]);

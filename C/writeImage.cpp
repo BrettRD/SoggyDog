@@ -103,7 +103,7 @@ int printHistogram(const char* name, grey2D8u* img){
     grey2D8u* printable;
     //flatmap = flatten(img);    //convert to 8bit
     printable = rescale(img, 16, -128);     //enhance the contrast
-    freeImage(flatmap);
+    //freeImage(flatmap);
     int retval = writeImage(name, printable);
     freeImage(printable);
     return retval;

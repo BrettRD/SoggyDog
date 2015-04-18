@@ -21,8 +21,8 @@
 //int steps;    //the step size of the histogram (in minutes)
 //int period;   //the period of image samples (in minutes)
 
-const int steps = 3;
-const int period = 1;
+const int steps = 30;
+const int period = 10;
 
 int userX = 0;
 int userY = 0;
@@ -111,8 +111,8 @@ int main(int argc, char **argv)
     grey2Dfl* scaledFlow;
     grey2Dfl* normalizedflow;
     float scale;
-    for(int t=1; t<steps;t++){
-        scale = t/((float) period);
+    for(int t=0; t<steps;t++){
+        scale = (t+1)/((float) period);
 
         printf("Scaling flow map by %f\n", scale);
         grey2Dfl* scaledFlow = scaleImage(flow, scale);
@@ -142,6 +142,7 @@ int main(int argc, char **argv)
     }
 
     //write_png_file(argv[2]);
+    printHistogram("histogram.png", histo);
 
     return 0;
 }

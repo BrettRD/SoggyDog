@@ -10,6 +10,7 @@
 //adding a number less than the current resolution makes rounding errors. this should help.
 //ideally, this would sum the numbers with smallest mantissaas first.
 float sumfloats(float* data, int num){
+    if(num==0) return 0;
     float tmpCopy[num];
     memcpy(tmpCopy, data, sizeof(float)*num);
     for(int d=1; d<num; d*=2){

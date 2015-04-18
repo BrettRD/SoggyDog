@@ -21,8 +21,8 @@
 //int steps;    //the step size of the histogram (in minutes)
 //int period;   //the period of image samples (in minutes)
 
-const int steps = 30;
-const int period = 10;
+const int steps = 3;
+const int period = 1;
 
 int userX = 0;
 int userY = 0;
@@ -32,6 +32,10 @@ int main(int argc, char **argv)
     if (argc != 3){
         abort_("Usage: program_name <old_file> <new_file> <file_out>");
     }
+
+    float testblock[10];
+    for(int i=0;i<10; i++) testblock[i] = 0.1;
+    printf("testsum = %f\n", sumfloats(testblock, 10));
 
     //read the files
     //read_png_file(argv[1]);
@@ -115,11 +119,14 @@ int main(int argc, char **argv)
 
         //the flow map is a stand-in for a probablility distribution
         float scaleFactor = sumImage(scaledFlow);
-        printf("normalizing flow map by %f\n", scaleFactor);
+        printf("normalizing flow map by 1/%f\n", scaleFactor);
         normalizedflow = rescale(scaledFlow, 1.0/scaleFactor, 0);
+
+        printFlow("normflow.png", normalizedflow);
+
         freeImage(scaledFlow);
         printf("normalized map integrates to %f\n", sumImage(normalizedflow));
-        
+
         printf("Calculating histogram\n");
         uint8_t* histoRow = histo->row[t];
         histogram(normalizedflow, newMap, userX, userY, histoRow);
@@ -127,7 +134,7 @@ int main(int argc, char **argv)
         //histograms
         for (int i = 0; i < nColours; ++i)
         {
-            printf(" %f,", histoRow[i]);
+            printf(" %d,", histoRow[i]);
         }
         printf("\n");
 

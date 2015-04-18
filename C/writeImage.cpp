@@ -143,7 +143,7 @@ int printFlow(const char* name, grey2D32s* img){
     printf("Flow extrema are: %d, %d\n", top, tail);
     float mult = (float)0xffffffff / (float)(top - tail);
     float offset = - ((top + tail)/2);
-    printf("begin image rescale\n");
+    //printf("begin image rescale\n");
     
     enhanced = rescale(img, mult, offset);     //enhance the contrast
     //printf("Flow extrema are: %d, %d\n", max(enhanced), min(enhanced));
@@ -165,7 +165,7 @@ int printFlow(const char* name, grey2Dfl* img){
     //get the range between 0-1
     float mult = 1.0 / (float)(top - tail);
     float offset = -tail;
-    printf("begin image rescale\n");
+    //printf("begin image rescale\n");
     
     enhanced = rescale(img, mult, offset);     //enhance the contrast
     //printf("Flow extrema are: %d, %d\n", max(enhanced), min(enhanced));

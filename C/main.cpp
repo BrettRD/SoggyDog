@@ -27,15 +27,45 @@ const int period = 10;
 int userX = 0;
 int userY = 0;
 
+float kmPerPixel = 1.0; //256km images 
+
+//float userLat = -31.9579;
+//float userLon = 115.8628;
+float userLat = -32.2;
+float userLon = 116.4;
+
+
+float mapLat = -32.3917;
+float mapLon = 115.8669;
+const float kmPerDeg = 111.2;
+/*Finding your image offset from your latitude and longitude
+//js from the BOM page
+function getMapY(lat, yKm) {
+    var mapy = (100 * lat)+(yKm / 1.1111);
+    return mapy;
+}
+
+function getMapX(lon, xKm, yKm, mapy) {
+    var mapx = (100 * lon)+(xKm / (1.1111 * Math.cos(mapy / 5729)));
+    return mapx;
+}
+*/
+
 int main(int argc, char **argv)
 {
     if (argc != 3){
         abort_("Usage: program_name <old_file> <new_file> <file_out>");
     }
 
-    float testblock[10];
-    for(int i=0;i<10; i++) testblock[i] = 0.1;
-    printf("testsum = %f\n", sumfloats(testblock, 10));
+    //pixel location from lat/long
+    userY = (kmPerDeg * (userLat-mapLat)) / kmPerPixel;
+    userX = (kmPerDeg * (userLon-mapLon)* cos(userLat*0.0174532)) / kmPerPixel;
+
+
+
+    //float testblock[10];
+    //for(int i=0;i<10; i++) testblock[i] = 0.1;
+    //printf("testsum = %f\n", sumfloats(testblock, 10));
 
     //read the files
     //read_png_file(argv[1]);

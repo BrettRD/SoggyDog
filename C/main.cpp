@@ -37,11 +37,26 @@ int main(int argc, char **argv)
     //read_png_file(argv[1]);
     //read_png_file(argv[2]);
 
+    //used for writing images
+    grey2D8u* flatmap;
+    grey2D8u* printable;
+    const char *outname;
+
     //index the colours
     //values 0-15
     printf("Indexing colours\n");
     grey2D8s* newMap = index_colours(argv[1]);
     grey2D8s* oldMap = index_colours(argv[2]);
+    
+
+    flatmap = flatten(newMap);    //convert to 8bit
+    printable = rescale(flatmap, 16, -128);     //enhance the contrast
+    freeImage(flatmap);
+    writeImage("indexed.png", printable);
+    freeImage(printable);
+    
+
+
 
     printf("Preparing a derivative kernel\n");
     //calculate the X and Y derivatives of the image
@@ -52,6 +67,14 @@ int main(int argc, char **argv)
     PrewittX(kernel);
     grey2D8s* newDx = derivative(newMap, kernel);
     grey2D8s* oldDx = derivative(oldMap, kernel);
+
+
+    flatmap = flatten(newDx);    //convert to 8bit
+    printable = rescale(flatmap, 1.5, -64);     //enhance the contrast
+    freeImage(flatmap);
+    writeImage("derivative.png", printable);
+    freeImage(printable);
+
 
     //4*width*height* [0-64]*[0-64] = 2^32
     printf("Correlating X derivatives\n");
@@ -93,11 +116,11 @@ int main(int argc, char **argv)
         uint8_t* histoRow = histo->row[t];
         histogram(scaledFlow, newMap, userX, userY, histoRow);
         //histograms
-        //for (int i = 0; i < nColours; ++i)
-        //{
-        //    printf(" %f,", histoRow[i]);
-        //}
-        //printf("\n");
+        for (int i = 0; i < nColours; ++i)
+        {
+            printf(" %f,", histoRow[i]);
+        }
+        printf("\n");
 
 
         freeImage(scaledFlow);

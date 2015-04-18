@@ -8,8 +8,8 @@
 
 #include "imagestructs.h"
 #include "indexer.h"
-
-
+#include "converters.h"
+#include "writeImage.h"
 
 grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB);
 int32_t dotProd(grey2D8s* imgA, grey2D8s* imgB, int offx, int offy);
@@ -32,5 +32,9 @@ grey2D32s* multiplyImages(grey2D32s* imgA, grey2D32s* imgB);
 //scale an image (linear interpolation)
 grey2Dfl* scaleImage(grey2D32s* flow, float scale);
 
+
+
+
 //from the libPNG example
 void abort_(const char * s, ...);
+

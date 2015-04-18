@@ -61,7 +61,7 @@ grey2D32s* squareImage(grey2D32s* img){
     printf("Square an image\n");
     for(int x=0; x< img->width; x++){
         for(int y=0; y< img->height; y++){
-            img->row[y][x] = (img->row[y][x]>>16) * (img->row[y][x]>>16);
+            img->row[y][x] = img->row[y][x] * img->row[y][x];
         }
     }
     return img;
@@ -77,7 +77,7 @@ grey2D32s* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
 
     for(int y=0; y< imgC->height; y++){
         for(int x=0; x< imgC->width; x++){
-            imgC->row[y][x] = (imgA->row[y][x]>>16) * (imgB->row[y][x]>>16);
+            imgC->row[y][x] = imgA->row[y][x] * imgB->row[y][x];
         }
     }
     return imgC;
@@ -120,3 +120,6 @@ grey2Dfl* scaleImage(grey2D32s* flow, float scale){
     }
     return scflow;
 }
+
+
+

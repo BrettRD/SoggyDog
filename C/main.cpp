@@ -90,12 +90,16 @@ int main(int argc, char **argv)
     freeImage(oldDy);
     freeImage(kernel);
 
+    printFlow("Yflow.png", flowy);
+
+
     printf("Combining derivatives\n");
     //this is not an accurate probability map:
     grey2D32s* flow = multiplyImages(squareImage(flowy), squareImage(flowx));
     printf("Dropping Correlations\n");
     freeImage(flowy);
     freeImage(flowx);
+    printFlow("Fullflow.png", flow);
 
     printf("Preparing a histogram\n");
     grey2D8u* histo = allocate_grey2D8u(steps, nColours);

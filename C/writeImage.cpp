@@ -134,7 +134,7 @@ int printFlow(const char* name, grey2D32s* img){
     printf("begin image rescale\n");
     
     enhanced = rescale(img, mult, offset);     //enhance the contrast
-    printf("Flow extrema are: %d, %d\n", max(enhanced), min(enhanced));
+    //printf("Flow extrema are: %d, %d\n", max(enhanced), min(enhanced));
     
     printable = flatten(enhanced);    //convert to 8bit
     freeImage(enhanced);

@@ -61,7 +61,8 @@ grey2D32s* squareImage(grey2D32s* img){
     printf("Square an image\n");
     for(int x=0; x< img->width; x++){
         for(int y=0; y< img->height; y++){
-            img->row[y][x] = img->row[y][x] * img->row[y][x];
+            //yay magic numbers!
+            img->row[y][x] = ((int64_t)img->row[y][x] * (int64_t)img->row[y][x])>>32;
         }
     }
     return img;
@@ -77,7 +78,8 @@ grey2D32s* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
 
     for(int y=0; y< imgC->height; y++){
         for(int x=0; x< imgC->width; x++){
-            imgC->row[y][x] = imgA->row[y][x] * imgB->row[y][x];
+            //yay magic numbers!
+            imgC->row[y][x] = ((int64_t)imgA->row[y][x] * (int64_t)imgB->row[y][x])>>32;
         }
     }
     return imgC;

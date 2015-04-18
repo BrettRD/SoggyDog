@@ -40,6 +40,7 @@ int main(int argc, char **argv)
     //used for writing images
     grey2D8u* flatmap;
     grey2D8u* printable;
+    grey2D32s* enhanced;
     const char *outname;
 
     //index the colours
@@ -49,12 +50,8 @@ int main(int argc, char **argv)
     grey2D8s* oldMap = index_colours(argv[2]);
     
 
-    flatmap = flatten(newMap);    //convert to 8bit
-    printable = rescale(flatmap, 16, -128);     //enhance the contrast
-    freeImage(flatmap);
-    writeImage("indexed.png", printable);
-    freeImage(printable);
-    
+    printIndexed("newColours.png", newMap);    //convert to 8bit
+    printIndexed("oldColours.png", oldMap);    //convert to 8bit
 
 
 
@@ -68,13 +65,8 @@ int main(int argc, char **argv)
     grey2D8s* newDx = derivative(newMap, kernel);
     grey2D8s* oldDx = derivative(oldMap, kernel);
 
-
-    flatmap = flatten(newDx);    //convert to 8bit
-    printable = rescale(flatmap, 1.5, -64);     //enhance the contrast
-    freeImage(flatmap);
-    writeImage("derivative.png", printable);
-    freeImage(printable);
-
+    printDerivative("newdx.png", newDx);
+    printDerivative("olddx.png", oldDx);
 
     //4*width*height* [0-64]*[0-64] = 2^32
     printf("Correlating X derivatives\n");
@@ -82,6 +74,10 @@ int main(int argc, char **argv)
     printf("Dropping X derivatives\n");
     freeImage(newDx);
     freeImage(oldDx);
+
+    printf("Flow size is: %d, %d\n", flowx->height, flowx->width);
+
+    printFlow("Xflow.png", flowx);
 
     printf("Calculating Y derivatives\n");
     PrewittY(kernel);

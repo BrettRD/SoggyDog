@@ -14,7 +14,7 @@ grey2D8s* rescale(grey2D8s* img, float mult, float offset){
     grey2D8s* outimg = allocate_grey2D8s(img->height, img->width);
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
-            outimg->row[y][x] = (img->row[y][x]+offset)*(mult);
+            outimg->row[y][x] = ((float)(img->row[y][x])+offset)*(mult);
         }
     }
     return outimg;
@@ -24,7 +24,7 @@ grey2D32s* rescale(grey2D32s* img, float mult, float offset){
     grey2D32s* outimg = allocate_grey2D32s(img->height, img->width);
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
-            outimg->row[y][x] = (img->row[y][x]+offset)*(mult);
+            outimg->row[y][x] = ((float)(img->row[y][x])+offset)*(mult);
         }
     }
     return outimg;
@@ -66,7 +66,7 @@ grey2D8u* flatten(grey2D32s* img){
     grey2D8u* outimg = allocate_grey2D8u(img->height, img->width);
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
-            outimg->row[y][x] = img->row[y][x]>>24;
+            outimg->row[y][x] = 128 +((int32_t)(img->row[y][x])>>24);
         }
     }
     return outimg;
@@ -86,47 +86,86 @@ grey2D8u* flatten(grey2Dfl* img){
 
 
 
-uint8_t* minmax(grey2D8u* img){
-    static uint8_t extrema[2];
-    extrema[0] = img->row[0][0];
-    extrema[1] = img->row[0][0];
+uint8_t min(grey2D8u* img){
+    uint8_t extrema;
+    extrema = img->row[0][0];
     for(int y = 0; y<img->height; y++){
         for(int x = 0; x < img->width; x++){
-            if(img->row[y][x] < extrema[0]) extrema[0] = img->row[y][x];
-            if(img->row[y][x] > extrema[1]) extrema[1] = img->row[y][x];
+            if(img->row[y][x] < extrema) extrema = img->row[y][x];
         }
     }
+    return extrema;
 }
-int8_t* minmax(grey2D8s* img){
-    static int8_t extrema[2];
-    extrema[0] = img->row[0][0];
-    extrema[1] = img->row[0][0];
+int8_t min(grey2D8s* img){
+    int8_t extrema;
+    extrema = img->row[0][0];
     for(int y = 0; y<img->height; y++){
         for(int x = 0; x < img->width; x++){
-            if(img->row[y][x] < extrema[0]) extrema[0] = img->row[y][x];
-            if(img->row[y][x] > extrema[1]) extrema[1] = img->row[y][x];
+            if(img->row[y][x] < extrema) extrema = img->row[y][x];
         }
     }
+    return extrema;
 }
-int32_t* minmax(grey2D32s* img){
-    static int32_t extrema[2];
-    extrema[0] = img->row[0][0];
-    extrema[1] = img->row[0][0];
+int32_t min(grey2D32s* img){
+    int32_t extrema;
+    extrema = img->row[0][0];
+    for(int y = 0; y < img->height; y++){
+        for(int x = 0; x < img->width; x++){
+            if(img->row[y][x] < extrema) extrema = img->row[y][x];
+        }
+    }
+    return extrema;
+}
+float min(grey2Dfl* img){
+    float extrema;
+    extrema = img->row[0][0];
     for(int y = 0; y<img->height; y++){
         for(int x = 0; x < img->width; x++){
-            if(img->row[y][x] < extrema[0]) extrema[0] = img->row[y][x];
-            if(img->row[y][x] > extrema[1]) extrema[1] = img->row[y][x];
+            if(img->row[y][x] < extrema) extrema = img->row[y][x];
         }
     }
+    return extrema;
 }
-float* minmax(grey2Dfl* img){
-    static float extrema[2];
-    extrema[0] = img->row[0][0];
-    extrema[1] = img->row[0][0];
+
+uint8_t max(grey2D8u* img){
+    uint8_t extrema;
+    extrema = img->row[0][0];
     for(int y = 0; y<img->height; y++){
         for(int x = 0; x < img->width; x++){
-            if(img->row[y][x] < extrema[0]) extrema[0] = img->row[y][x];
-            if(img->row[y][x] > extrema[1]) extrema[1] = img->row[y][x];
+            if(img->row[y][x] > extrema) extrema = img->row[y][x];
         }
     }
+    return extrema;
 }
+int8_t max(grey2D8s* img){
+    int8_t extrema;
+    extrema = img->row[0][0];
+    for(int y = 0; y<img->height; y++){
+        for(int x = 0; x < img->width; x++){
+            if(img->row[y][x] > extrema) extrema = img->row[y][x];
+        }
+    }
+    return extrema;
+}
+int32_t max(grey2D32s* img){
+    int32_t extrema;
+    extrema = img->row[0][0];
+    for(int y = 0; y < img->height; y++){
+        for(int x = 0; x < img->width; x++){
+            if(img->row[y][x] > extrema) extrema = img->row[y][x];
+        }
+    }
+    return extrema;
+}
+float max(grey2Dfl* img){
+    float extrema;
+    extrema = img->row[0][0];
+    for(int y = 0; y<img->height; y++){
+        for(int x = 0; x < img->width; x++){
+            if(img->row[y][x] > extrema) extrema = img->row[y][x];
+        }
+    }
+    return extrema;
+}
+
+

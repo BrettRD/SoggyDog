@@ -49,6 +49,8 @@ int32_t dotProd(grey2D8s* imgA, grey2D8s* imgB, int offx, int offy){
     int8_t** rowsA = imgA->row;
     int8_t** rowsB = imgB->row;
     
+
+    //How can I make this faster?
     for(int y=0;y<height; y++){
         //Ay = y+Aoffy;
         //By = y+Boffy;

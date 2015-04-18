@@ -10,7 +10,9 @@ grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB){
         //printf("Starting col %d of %d\n", offx, imgC->width);
         for(int offy=0; offy<(imgC->height); offy++){
             //printf("Starting row %d\n", offy);
+
             imgC->row[offy][offx] = dotProd(imgA, imgB, offx-(imgA->width-1), offy-(imgA->height-1) );
+            //printf("Flow values at %d, %d is:%d\n", offy, offx, imgC->row[offy][offx]);
         }
     }
     return imgC;

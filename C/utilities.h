@@ -11,7 +11,7 @@
 #include "converters.h"
 #include "writeImage.h"
 
-grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB);
+grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB, int size);
 int32_t dotProd(grey2D8s* imgA, grey2D8s* imgB, int offx, int offy);
 
 float sumImage(grey2Dfl* img);

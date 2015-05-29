@@ -44,16 +44,16 @@ float sumImage(grey2Dfl* img){
 //quick and dirty prewitt, only handles 3x3 kernels
 //I've used much larger kernels in the past, FIX ME.
 void PrewittX(grey2D8s* kernel){
-	for(int x=0; x<kernel->height; x++){
-		for(int y=0; y<kernel->width; y++){
+	for(int y=0; y<kernel->height; y++){
+		for(int x=0; x<kernel->width; x++){
 			kernel->row[x][y] = x-1;
 		}
 	}
 }
 
 void PrewittY(grey2D8s* kernel){
-	for(int x=0; x<kernel->height; x++){
-		for(int y=0; y<kernel->width; y++){
+	for(int y=0; y<kernel->height; y++){
+		for(int x=0; x<kernel->width; x++){
 			kernel->row[x][y] = y-1;
 		}
 	}

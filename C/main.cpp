@@ -17,24 +17,29 @@
 #include "utilities.h"
 
 
-//expand the totalFlow image to 1/15 to 4
-//int steps;    //the step size of the histogram (in minutes)
-//int period;   //the period of image samples (in minutes)
-
-const int steps = 30;
-const int period = 10;
+const int steps = 30;//the number of steps in the histogram (in minutes)
+const int period = 10;//the period of the source image samples (in minutes)
 
 int userX = 0;
 int userY = 0;
 
-float kmPerPixel = 1.0; //256km images 
+const float kmPerPixel = 1.0; //256km images (eg. IDR703)
+
+/*
+Cut compute time by limiting the size of the flow image to something reasonable.
+Simple application of the functions permits wind speeds up to (512Km/10mins on the IDR703) 3072km/hr which is ridiculous.
+Limiting to 300Km/hr reduces the compute size by a factor of 100.
+*/
+const float maxWindSpeed = 300;  //km per hour
+const int flowSize = 2 * ceil((maxWindSpeed / kmPerPixel) * (period/60.0));// the number of pixels something can move at the max speed.
+
 
 //float userLat = -31.9579;
 //float userLon = 115.8628;
 float userLat = -32.2;
 float userLon = 116.4;
 
-
+//serpentine
 float mapLat = -32.3917;
 float mapLon = 115.8669;
 const float kmPerDeg = 111.2;
@@ -104,7 +109,7 @@ int main(int argc, char **argv)
 
     //4*width*height* [0-64]*[0-64] = 2^32
     printf("Correlating X derivatives\n");
-    grey2D32s* flowx = correlate(newDx, oldDx);
+    grey2D32s* flowx = correlate(newDx, oldDx, flowSize);
     printf("Dropping X derivatives\n");
     freeImage(newDx);
     freeImage(oldDx);
@@ -119,7 +124,7 @@ int main(int argc, char **argv)
     grey2D8s* oldDy = derivative(oldMap, kernel);
 
     printf("Correlating Y derivatives\n");
-    grey2D32s* flowy = correlate(newDy, oldDy);
+    grey2D32s* flowy = correlate(newDy, oldDy, flowSize);
     freeImage(newDy);
     freeImage(oldDy);
     freeImage(kernel);

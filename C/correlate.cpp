@@ -1,9 +1,10 @@
 #include "utilities.h"
 
-grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB){
+grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB, int size){
     //needs to produce floats, but will need to fork out the additions in a tree to maintain comparable sizes.
     //make an image of the correct size (width*2 -2, height*2-2)
-    grey2D32s* imgC = allocate_grey2D32s(imgA->height + imgB->height -2, imgA->width + imgB->width -2);
+
+    grey2D32s* imgC = allocate_grey2D32s(size, size);
     int height = imgC->height;
     int width = imgC->width;
 
@@ -12,7 +13,7 @@ grey2D32s* correlate(grey2D8s* imgA, grey2D8s* imgB){
         for(int offy=0; offy < height; offy++){
             //printf("Starting row %d\n", offy);
 
-            imgC->row[offy][offx] = dotProd(imgA, imgB, offx-(imgA->width-1), offy-(imgA->height-1) );
+            imgC->row[offy][offx] = dotProd(imgA, imgB, offx-(size/2), offy-(size/2) );
             //printf("Flow values at %d, %d is:%d\n", offy, offx, imgC->row[offy][offx]);
         }
     }

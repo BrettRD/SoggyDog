@@ -30,7 +30,7 @@ Cut compute time by limiting the size of the flow image to something reasonable.
 Simple application of the functions permits wind speeds up to (512Km/10mins on the IDR703) 3072km/hr which is ridiculous.
 Limiting to 300Km/hr reduces the compute size by a factor of 100.
 */
-const float maxWindSpeed = 300;  //km per hour
+const float maxWindSpeed = 150;  //km per hour
 const int flowSize = 2 * ceil((maxWindSpeed / kmPerPixel) * (period/60.0));// the number of pixels something can move at the max speed.
 
 

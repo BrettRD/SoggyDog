@@ -116,26 +116,32 @@ grey2Dfl* scaleImage(grey2Dfl* flow, float scale){
             float oY = y/scale;
             float oX = x/scale;
             
-            int oY1 = floor(y/scale);
-            int oY2 = ceil(y/scale);
-            int oX1 = floor(x/scale);
-            int oX2 = ceil(x/scale);
-            if(oY1 >= flow->height) abort_("Error: Y1 out of interpolation bounds Y");
-            if(oX1 >= flow->width) abort_("Error: X1 out of interpolation bounds x");
-            if(oY2 >= flow->height) abort_("Error: Y2 out of interpolation bounds Y");
-            if(oX2 >= flow->width) abort_("Error: X2 out of interpolation bounds x");
+            int oY1 = floor(oY);
+            int oY2 = ceil(oY);
+            int oX1 = floor(oX);
+            int oX2 = ceil(oX);
+            //if(oY1 >= flow->height) abort_("Error: Y1 out of interpolation bounds Y");
+            //if(oX1 >= flow->width) abort_("Error: X1 out of interpolation bounds x");
+            //if(oY2 >= flow->height) abort_("Error: Y2 out of interpolation bounds Y");
+            //if(oX2 >= flow->width) abort_("Error: X2 out of interpolation bounds x");
 
             //linear interpolation goes here
-            scflow->row[y][x] = 
-            flow->row[oY1][oX1] * (oX2 - oX) * (oY2 - oY) +
-            flow->row[oY1][oX2] * (oX - oX1) * (oY2 - oY) +
-            flow->row[oY2][oX1] * (oX2 - oX) * (oY - oY1) +
-            flow->row[oY2][oX2] * (oX - oX1) * (oY - oY1)
-            ;
+            if((oX1==oX2)&&(oY1==oY2)) {
+                scflow->row[y][x]  = flow->row[oY1][oX1];
+            }else if(oX1==oX2){
+                scflow->row[y][x]  = flow->row[oY1][oX1] * (oY2 - oY);
+                scflow->row[y][x] += flow->row[oY2][oX1] * (oY - oY1);
+            }else if(oY1==oY2){
+                scflow->row[y][x]  = flow->row[oY1][oX1] * (oX2 - oX);
+                scflow->row[y][x] += flow->row[oY1][oX2] * (oX - oX1);
+            }else{            
+                scflow->row[y][x]  = flow->row[oY1][oX1] * (oX2 - oX) * (oY2 - oY);
+                scflow->row[y][x] += flow->row[oY1][oX2] * (oX - oX1) * (oY2 - oY);
+                scflow->row[y][x] += flow->row[oY2][oX1] * (oX2 - oX) * (oY - oY1);
+                scflow->row[y][x] += flow->row[oY2][oX2] * (oX - oX1) * (oY - oY1);
+            }
         }
     }
     return scflow;
 }
-
-
 

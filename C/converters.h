@@ -1,4 +1,5 @@
-
+#ifndef CONVERTERS_H
+#define CONVERTERS_H
 
 grey2D8u* rescale(grey2D8u* img, float mult, float offset);
 grey2D8s* rescale(grey2D8s* img, float mult, float offset);
@@ -21,3 +22,4 @@ uint8_t max(grey2D8u* img);
 int8_t max(grey2D8s* img);
 int32_t max(grey2D32s* img);
 float max(grey2Dfl* img);
+#endif

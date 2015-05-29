@@ -5,8 +5,8 @@
  *
  *
  */
-
-
+#ifndef INDEXER_H
+#define INDEXER_H
  // the radar images from bom.gov.au come with a 16px banner that must be trimmed
 const uint8_t cropBorder = 16;
 
@@ -39,3 +39,4 @@ const uint8_t nColours = 16;
 //uint8_t** index_colours(int height, int width, png_bytep* row_pointers);
 grey2D8s* index_colours(char* file_name);
 
+#endif

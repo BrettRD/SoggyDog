@@ -1,3 +1,5 @@
+#ifndef UTILITIES_H
+#define UTILITIES_H
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,4 +42,4 @@ grey2Dfl* scaleImage(grey2Dfl* flow, float scale);
 
 //from the libPNG example
 void abort_(const char * s, ...);
-
+#endif

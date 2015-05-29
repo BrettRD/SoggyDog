@@ -15,7 +15,7 @@
 #define PNG_DEBUG 3
 #include <png.h>
 #include "utilities.h"
-
+//#define SAVE_INTERMEDIATE
 
 const int steps = 30;//the number of steps in the histogram (in minutes)
 const int period = 10;//the period of the source image samples (in minutes)
@@ -88,10 +88,10 @@ int main(int argc, char **argv)
     grey2D8s* newMap = index_colours(argv[1]);
     grey2D8s* oldMap = index_colours(argv[2]);
     
-
+#ifdef SAVE_INTERMEDIATE
     printIndexed("newColours.png", newMap);    //convert to 8bit
     printIndexed("oldColours.png", oldMap);    //convert to 8bit
-
+#endif
 
 
     printf("Preparing a derivative kernel\n");
@@ -103,10 +103,10 @@ int main(int argc, char **argv)
     PrewittX(kernel);
     grey2D8s* newDx = derivative(newMap, kernel);
     grey2D8s* oldDx = derivative(oldMap, kernel);
-
+#ifdef SAVE_INTERMEDIATE
     printDerivative("newdx.png", newDx);
     printDerivative("olddx.png", oldDx);
-
+#endif
     //4*width*height* [0-64]*[0-64] = 2^32
     printf("Correlating X derivatives\n");
     grey2D32s* flowx = correlate(newDx, oldDx, flowSize);
@@ -115,9 +115,9 @@ int main(int argc, char **argv)
     freeImage(oldDx);
 
     printf("Flow size is: %d, %d\n", flowx->height, flowx->width);
-
+#ifdef SAVE_INTERMEDIATE
     printFlow("Xflow.png", flowx);
-
+#endif
     printf("Calculating Y derivatives\n");
     PrewittY(kernel);
     grey2D8s* newDy = derivative(newMap, kernel);
@@ -128,9 +128,9 @@ int main(int argc, char **argv)
     freeImage(newDy);
     freeImage(oldDy);
     freeImage(kernel);
-
+#ifdef SAVE_INTERMEDIATE
     printFlow("Yflow.png", flowy);
-
+#endif
 
     printf("Combining derivatives\n");
     //this is not an accurate probability map:
@@ -156,9 +156,9 @@ int main(int argc, char **argv)
         float scaleFactor = sumImage(scaledFlow);
         printf("normalizing flow map by 1/%f\n", scaleFactor);
         normalizedflow = rescale(scaledFlow, 1.0/scaleFactor, 0);
-
+#ifdef SAVE_INTERMEDIATE
         printFlow("normflow.png", normalizedflow);
-
+#endif
         freeImage(scaledFlow);
         printf("normalized map integrates to %f\n", sumImage(normalizedflow));
 

@@ -1,3 +1,5 @@
+#ifndef IMAGESTRUCTS_H
+#define IMAGESTRUCTS_H
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -47,3 +49,4 @@ void freeImage(grey2D8s* img);
 void freeImage(grey2D32s* img);
 void freeImage(grey2Dfl* img);
 
+#endif

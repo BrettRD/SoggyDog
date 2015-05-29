@@ -1,11 +1,6 @@
 
 #include "utilities.h"
 
-
-
-
-
-
 //sum an array of floats in a binary tree.
 //adding a number less than the current resolution makes rounding errors. this should help.
 //ideally, this would sum the numbers with smallest mantissaas first.

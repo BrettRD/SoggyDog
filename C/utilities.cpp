@@ -68,7 +68,7 @@ void abort_(const char * s, ...)
 
 //squares every element of an image, (in place operation)
 grey2D32s* squareImage(grey2D32s* img){
-    printf("Square an image\n");
+    //printf("Square an image\n");
     for(int x=0; x< img->width; x++){
         for(int y=0; y< img->height; y++){
             //this needs to become floats, or I need a 128 bit processor
@@ -80,7 +80,7 @@ grey2D32s* squareImage(grey2D32s* img){
 
 //element by element multipication of two images
 grey2Dfl* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
-    printf("Multiply some images\n");
+    //printf("Multiply some images\n");
     if((imgA->height != imgB->height) || (imgA->width != imgB->width) ){
         abort_("Error: attempting to multiply elements of different sized images");
     }

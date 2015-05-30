@@ -99,10 +99,11 @@ int writeImage(const char* filename, grey2D8u* img)
 	return code;
 }
 int printHistogram(const char* name, grey2D8u* img){
-	grey2D8u* flatmap;
+	//grey2D8u* flatmap;
     grey2D8u* printable;
     //flatmap = flatten(img);    //convert to 8bit
-    printable = rescale(img, 16, -128);     //enhance the contrast
+    printable = rescale(img, 1, 0);     //enhance the contrast
+    //printable = rescale(img, 16, -128);     //enhance the contrast
     //freeImage(flatmap);
     int retval = writeImage(name, printable);
     freeImage(printable);
@@ -140,7 +141,7 @@ int printFlow(const char* name, grey2D32s* img){
     grey2D32s* enhanced;
     int32_t top = max(img);
     int32_t tail = min(img);
-    printf("Flow extrema are: %d, %d\n", top, tail);
+    //printf("Flow extrema are: %d, %d\n", top, tail);
     float mult = (float)0xffffffff / (float)(top - tail);
     float offset = - ((top + tail)/2);
     //printf("begin image rescale\n");
@@ -161,7 +162,7 @@ int printFlow(const char* name, grey2Dfl* img){
     grey2Dfl* enhanced;
     float top = max(img);
     float tail = min(img);
-    printf("Flow extrema are: %f, %f\n", top, tail);
+    //printf("Flow extrema are: %f, %f\n", top, tail);
     //get the range between 0-1
     float mult = 1.0 / (float)(top - tail);
     float offset = -tail;

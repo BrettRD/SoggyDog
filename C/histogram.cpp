@@ -47,14 +47,6 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
     int Bx;  // x offset into imageB
 
 
-
-	/*
-    float* tmpRow[nColours];
-    for(int i=0;i<nColours;i++){
-    	tmpRow[i] = (float*) malloc(sizeof(float) * width);
-    }
-	*/
-
     float* tmpCol[nColours];
     int colbinsize[nColours];
     
@@ -82,15 +74,7 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
             Ax = x+Aoffx;
             Bx = x+Boffx;
 
-            /*
-            //seperate into bins
-            int bin = binimg->row[By][Bx];	//the colour we're looking at.
-            if((bin<0) || (bin>=nColours)) abort_("histogram encountered a colour not associated with a bin.");
-            tmpRow[bin][binsize[bin]++] = greyimg->row[Ay][Ax];
-        	*/
-
-        	//this could actually be performed into a single array of size width, kind of like an insertion sort.
-        	///*
+        	//collect the row into bins, kind of like an insertion sort.
 			int bin = binimg->row[By][Bx];	//the colour we're looking at.
         	if((bin<0) || (bin>=nColours)){
                 printf("WTF is colour %d?\n", bin);
@@ -105,23 +89,8 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
             //printf("added %f to bin %d\n", greyimg->row[Ay][Ax], bin);
        	    binsize[bin]++;	//so we can tell how many to sum later
 
-            //print the contents of the bins
-            //for (int tcols = 0; tcols < nColours; ++tcols)
-            //{
-            //    printf("x=%d, y=%d, bin %d has:", x, y, tcols);
-            //    for (int binele = 0; binele < binsize[tcols]; ++binele)
-            //    {
-            //        printf(" %f,", bins[tcols][binele]);
-            //    }
-            //    printf("\n");
-            //}
-
         }
-        /*
-	    for(int bin=0;bin<nColours;bin++){
-    	    tmpCol[bin][y] = sumfloats(tmpRow[bin], binsize[bin]);
-    	}
-    	*/
+
     	for(int bin=0;bin<nColours;bin++){
     		if(binsize[bin]>0){
                 float binsum = sumfloats(bins[bin], binsize[bin]);
@@ -129,7 +98,6 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
                 tmpCol[bin][colbinsize[bin]++] = binsum;
     		}
     	}
-
 
     }
     int histogramTotal = -255;

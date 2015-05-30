@@ -154,24 +154,26 @@ int main(int argc, char **argv)
 
         //the flow map is a stand-in for a probablility distribution
         float scaleFactor = sumImage(scaledFlow);
-        printf("normalizing flow map by 1/%f\n", scaleFactor);
+        //printf("normalizing flow map by 1/%f\n", scaleFactor);
         normalizedflow = rescale(scaledFlow, 1.0/scaleFactor, 0);
 #ifdef SAVE_INTERMEDIATE
         printFlow("normflow.png", normalizedflow);
 #endif
         freeImage(scaledFlow);
-        printf("normalized map integrates to %f\n", sumImage(normalizedflow));
+        //printf("normalized map integrates to %f\n", sumImage(normalizedflow));
 
         printf("Calculating histogram\n");
         uint8_t* histoRow = histo->row[t];
         histogram(normalizedflow, newMap, userX, userY, histoRow);
         freeImage(normalizedflow);
         //histograms
-        for (int i = 0; i < nColours; ++i)
-        {
-            printf(" %d,", histoRow[i]);
-        }
-        printf("\n");
+        //uint16_t accumulator = 0;
+        //for (int i = 0; i < nColours; ++i)
+        //{
+        //    accumulator+=histoRow[i];
+        //    printf(" %d,", histoRow[i]);
+        //}
+        //printf("%d\n", accumulator);
 
 
     }

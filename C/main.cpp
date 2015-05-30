@@ -1,8 +1,11 @@
 /*
- * Copyright 2002-2011 Guillaume Cottenceau and contributors.
+ *SoggyDog
+ *A radar prediction engine
+ *Copyright Brett Downing 2014-2015
  *
- * This software may be freely redistributed under the terms
- * of the X11 license.
+ *With Thanks to Guillaume Cottenceau and contributors for libpng examples
+ *
+ * Released under GPL v3
  *
  */
 

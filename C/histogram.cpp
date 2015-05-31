@@ -23,7 +23,13 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
         width= binimg->width - Boffx;
         if(greyimg->width < width) width = greyimg->width;
     }
-    //if(width<=0) return 0;
+    if(width<=0){
+        printf("Oops! Computing histogram way out of bounds");
+        for(int bin=0;bin<nColours;bin++){
+            outBins[bin] = 0;
+        }
+        return;
+    }
 
     int height;
     int Aoffy;
@@ -39,7 +45,13 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
         height= binimg->height - Boffy;
         if(greyimg->height < height) height = greyimg->height;
     }
-    //if(height<=0) return 0;
+    if(height<=0) {
+        printf("Oops! Computing histogram way out of bounds");
+        for(int bin=0;bin<nColours;bin++){
+            outBins[bin] = 0;
+        }
+        return;
+    }
 
     int Ay;  // y offset into imageA
     int By;  // y offset into imageB

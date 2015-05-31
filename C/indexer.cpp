@@ -1,24 +1,10 @@
 /*
- * A simple libpng example program
+ * Function to read the bom.gov.au radar image colour maps
+ * using methods copied from
  * http://zarb.org/~gc/html/libpng.html
- *
- * Modified by Yoshimasa Niwa to make it much simpler
- * and support all defined color_type.
- *
- * To build, use the next instruction on OS X.
- * $ brew install libpng
- * $ clang -lz -lpng15 libpng_test.c
- *
- * Copyright 2002-2010 Guillaume Cottenceau.
- *
- * This software may be freely redistributed under the terms
- * of the X11 license.
+ * With Thanks to Guillaume Cottenceau and contributors for libpng examples
  *
  */
-
-/*
-*further modified, shoehorned in as an indexer.
-*/
 
 #include "utilities.h"
 #include <png.h>

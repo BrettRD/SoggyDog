@@ -18,46 +18,20 @@
 #define PNG_DEBUG 3
 #include <png.h>
 #include "utilities.h"
+#include "config.h"
 //#define SAVE_INTERMEDIATE
 
-const int steps = 30;//the number of steps in the histogram (in minutes)
-const int period = 10;//the period of the source image samples (in minutes)
-
-int userX = 0;
-int userY = 0;
-
-const float kmPerPixel = 1.0; //256km images (eg. IDR703)
 
 /*
 Cut compute time by limiting the size of the flow image to something reasonable.
 Simple application of the functions permits wind speeds up to (512Km/10mins on the IDR703) 3072km/hr which is ridiculous.
 Limiting to 300Km/hr reduces the compute size by a factor of 100.
 */
-const float maxWindSpeed = 150;  //km per hour
-const int flowSize = 2 * ceil((maxWindSpeed / kmPerPixel) * (period/60.0));// the number of pixels something can move at the max speed.
+//const float maxWindSpeed = 150;  //km per hour
+//const int flowSize = 2 * ceil((maxWindSpeed / kmPerPixel) * (period/60.0));// the number of pixels something can move at the max speed.
 
 
-//float userLat = -31.9579;
-//float userLon = 115.8628;
-float userLat = -32.2;
-float userLon = 116.4;
 
-//serpentine
-float mapLat = -32.3917;
-float mapLon = 115.8669;
-const float kmPerDeg = 111.2;
-/*Finding your image offset from your latitude and longitude
-//js from the BOM page
-function getMapY(lat, yKm) {
-    var mapy = (100 * lat)+(yKm / 1.1111);
-    return mapy;
-}
-
-function getMapX(lon, xKm, yKm, mapy) {
-    var mapx = (100 * lon)+(xKm / (1.1111 * Math.cos(mapy / 5729)));
-    return mapx;
-}
-*/
 
 int main(int argc, char **argv)
 {
@@ -65,25 +39,16 @@ int main(int argc, char **argv)
         abort_("Usage: program_name <old_file> <new_file> <file_out>");
     }
 
-    //pixel location from lat/long
-    userY = (kmPerDeg * (userLat-mapLat)) / kmPerPixel;
-    userX = (kmPerDeg * (userLon-mapLon)* cos(userLat*0.0174532)) / kmPerPixel;
+    Radar radar;
+    int nPaths;
+    Prediction config;
 
+    char* filename = "";
 
+    readSites(filename, &radar);
+    Path* paths = readPaths(filename, &nPaths);
+    readConf(filename, &config);
 
-    //float testblock[10];
-    //for(int i=0;i<10; i++) testblock[i] = 0.1;
-    //printf("testsum = %f\n", sumfloats(testblock, 10));
-
-    //read the files
-    //read_png_file(argv[1]);
-    //read_png_file(argv[2]);
-
-    //used for writing images
-    grey2D8u* flatmap;
-    grey2D8u* printable;
-    grey2D32s* enhanced;
-    const char *outname;
 
     //index the colours
     //values 0-15
@@ -95,7 +60,6 @@ int main(int argc, char **argv)
     printIndexed("newColours.png", newMap);    //convert to 8bit
     printIndexed("oldColours.png", oldMap);    //convert to 8bit
 #endif
-
 
     printf("Preparing a derivative kernel\n");
     //calculate the X and Y derivatives of the image
@@ -112,7 +76,7 @@ int main(int argc, char **argv)
 #endif
     //4*width*height* [0-64]*[0-64] = 2^32
     printf("Correlating X derivatives\n");
-    grey2D32s* flowx = correlate(newDx, oldDx, flowSize);
+    grey2D32s* flowx = correlate(newDx, oldDx, flowSize(&radar, &config));
     printf("Dropping X derivatives\n");
     freeImage(newDx);
     freeImage(oldDx);
@@ -127,7 +91,8 @@ int main(int argc, char **argv)
     grey2D8s* oldDy = derivative(oldMap, kernel);
 
     printf("Correlating Y derivatives\n");
-    grey2D32s* flowy = correlate(newDy, oldDy, flowSize);
+    grey2D32s* flowy = correlate(newDy, oldDy, flowSize(&radar, &config));
+    printf("Dropping Y derivatives\n");
     freeImage(newDy);
     freeImage(oldDy);
     freeImage(kernel);
@@ -141,16 +106,25 @@ int main(int argc, char **argv)
     printf("Dropping Correlations\n");
     freeImage(flowy);
     freeImage(flowx);
+
+    //The full flow image the hard to compute, and we can use it later to re-compute histograms
     printFlow("Fullflow.png", flow);
 
-    printf("Preparing a histogram\n");
-    grey2D8u* histo = allocate_grey2D8u(steps, nColours);
+    printf("Preparing %d histograms\n", nPaths);
+
+    grey2D8u* histo[nPaths];
+    for(int i = 0; i<nPaths; i++){
+        histo[i] = allocate_grey2D8u(config.stepcount, nColours);
+        if(histo[i] == NULL)  abort_("could not allocate a histogram");
+    }
     
+
+    uint8_t* histoRow;
     grey2Dfl* scaledFlow;
     grey2Dfl* normalizedflow;
     float scale;
-    for(int t=0; t<steps;t++){
-        scale = (t+1)/((float) period);
+    for(int t=0; t<config.stepcount;t++){
+        scale = (t+1)/((float) radar.period);  //needs to change to respect config->stepPeriod
 
         printf("Scaling flow map by %f\n", scale);
         grey2Dfl* scaledFlow = scaleImage(flow, scale);
@@ -165,24 +139,38 @@ int main(int argc, char **argv)
         freeImage(scaledFlow);
         //printf("normalized map integrates to %f\n", sumImage(normalizedflow));
 
-        printf("Calculating histogram\n");
-        uint8_t* histoRow = histo->row[t];
-        histogram(normalizedflow, newMap, userX, userY, histoRow);
-        freeImage(normalizedflow);
-        //histograms
-        //uint16_t accumulator = 0;
-        //for (int i = 0; i < nColours; ++i)
-        //{
-        //    accumulator+=histoRow[i];
-        //    printf(" %d,", histoRow[i]);
-        //}
-        //printf("%d\n", accumulator);
+        printf("Calculating histograms\n");
+        
+        for(int i = 0; i<nPaths; i++){
+            
+            printf("select a row of histogram %d\n", i);
+            histoRow = histo[i]->row[t];
+            printf("histogram %d is %d by %d\n", i, histo[i]->width, histo[i]->height);
+            
+            
+            printf("calculate map offset\n");
+            int userX = mapXpx(paths[i].lat, paths[i].lon, &radar);
+            int userY = mapYpx(paths[i].lat, paths[i].lon, &radar);
+            printf("Compute histogram\n");
+            histogram(normalizedflow, newMap, userX, userY, histoRow);
+            //histograms
+            //uint16_t accumulator = 0;
+            //for (int i = 0; i < nColours; ++i)
+            //{
+            //    accumulator+=histoRow[i];
+            //    printf(" %d,", histoRow[i]);
+            //}
+            //printf("%d\n", accumulator);
 
+        }
+        freeImage(normalizedflow);
 
     }
 
     //write_png_file(argv[2]);
-    printHistogram("histogram.png", histo);
+    for(int i = 0; i<nPaths; i++){
+        printHistogram(paths[i].name, histo[i]);
+    }
 
     return 0;
 }

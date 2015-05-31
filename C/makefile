@@ -2,8 +2,8 @@
 
 all: SoggyDog
 
-SoggyDog: indexer.o converters.o writeImage.o histogram.o imagestructs.o dotproduct.o correlate.o utilities.o main.o
-	g++ -lpng main.o indexer.o converters.o writeImage.o histogram.o imagestructs.o dotproduct.o correlate.o utilities.o -o SoggyDog
+SoggyDog: config.o indexer.o converters.o writeImage.o histogram.o imagestructs.o dotproduct.o correlate.o utilities.o main.o
+	g++ -lpng main.o config.o indexer.o converters.o writeImage.o histogram.o imagestructs.o dotproduct.o correlate.o utilities.o -o SoggyDog
 
 main.o: main.cpp
 	g++ -c main.cpp
@@ -31,6 +31,9 @@ converters.o: converters.cpp
 
 writeImage.o: writeImage.cpp
 	g++ -c writeImage.cpp	
+
+config.o: config.cpp
+	g++ -c config.cpp	
 
 
 clean:

@@ -20,6 +20,14 @@ The octave folder contains the old code base, this software can be made to work,
 
 ### The C folder
 
-The C folder contains the beginnings of a port to C, and eventually OpenCL.
+The C folder contains the port to C, along with improved flexibility and probably broken memory management.
+It uses rapidjson, copy include/rapidjson into the C folder to compile (as per instructions from https://github.com/miloyip/rapidjson)
 
+Performance was interesing, a simple (naive) image convolution takes O(n^4), octave uses fourier methods now so it runs at O(n^3 log(n)).  Cropping the convolution to physically plausible ranges, it runs much faster than the octave script. There is still plenty of room for improvement.
 
+The location of the radar installation, the users (and their names), and the prediction settings are stored in Paths.json
+This is all going alongside a small python script to pull down the latest images.
+
+I might one day port to OpenCL, but I'm running this on a Raspberry Pi 2 so there's no point yet. (273 seconds execution time on one core)
+
+Patches Welcome.

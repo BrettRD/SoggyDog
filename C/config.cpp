@@ -36,10 +36,10 @@ void readSites(char* filename, Radar* radar){
 	assert(site.HasMember("Lon"));
 	assert(site.HasMember("period"));
 
-	assert(site["range"].IsDouble());
-	assert(site["Lat"].IsDouble());
-	assert(site["Lon"].IsDouble());
-	assert(site["period"].IsDouble());
+	assert(site["range"].IsNumber());
+	assert(site["Lat"].IsNumber());
+	assert(site["Lon"].IsNumber());
+	assert(site["period"].IsNumber());
 
 	radar->range = site["range"].GetDouble();
 	radar->lat = site["Lat"].GetDouble();
@@ -68,8 +68,8 @@ Path* readPaths(char* filename, int* nPaths){
 		assert(jsonPath[i].HasMember("Lon"));
 
 		assert(jsonPath[i]["name"].IsString());
-		assert(jsonPath[i]["Lat"].IsDouble());
-		assert(jsonPath[i]["Lon"].IsDouble());
+		assert(jsonPath[i]["Lat"].IsNumber());
+		assert(jsonPath[i]["Lon"].IsNumber());
 
 		//paths[i].name = jsonPath[i]["name"].GetString();	//REALLY DOESN'T WORK!
 		const char* c = jsonPath[i]["name"].GetString();		//tmp value
@@ -78,11 +78,9 @@ Path* readPaths(char* filename, int* nPaths){
 		paths[i].lat = jsonPath[i]["Lat"].GetDouble();
 		paths[i].lon = jsonPath[i]["Lon"].GetDouble();
 
-		printf("name = %s\n", paths[i].name);
-
-
-		printf("lat = %g\n", paths[i].lat);
-		printf("lon = %g\n", paths[i].lon);
+		//printf("name = %s\n", paths[i].name);
+		//printf("lat = %g\n", paths[i].lat);
+		//printf("lon = %g\n", paths[i].lon);
 	}
 
 	return paths;
@@ -106,7 +104,7 @@ void readConf(char* filename, Prediction* config){
 
 	assert(conf["stepCount"].IsUint());
 	assert(conf["stepPeriod"].IsUint());
-	assert(conf["maxSpeed"].IsDouble());
+	assert(conf["maxSpeed"].IsNumber());
 
 	config->stepcount = conf["stepCount"].GetUint();	//minutes
 	config->stepPeriod = conf["stepPeriod"].GetUint(); //minute

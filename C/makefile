@@ -3,10 +3,10 @@
 all: SoggyDog
 
 SoggyDog: config.o indexer.o converters.o writeImage.o histogram.o imagestructs.o dotproduct.o correlate.o utilities.o main.o
-	g++ -g -lpng main.o config.o indexer.o converters.o writeImage.o histogram.o imagestructs.o dotproduct.o correlate.o utilities.o -o SoggyDog
+	g++ -g -lpng main.o config.o indexer.o converters.o writeImage.o histogram.o imagestructs.o dotproduct.o correlate.o utilities.o -o SoggyDog -pthread -std=c++0x
 
 main.o: main.cpp
-	g++ -g -c main.cpp
+	g++ -g -c main.cpp -pthread -std=c++0x
 
 imagestructs.o: imagestructs.cpp
 	g++ -g -c imagestructs.cpp

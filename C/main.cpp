@@ -19,7 +19,9 @@
 #include <png.h>
 #include "utilities.h"
 #include "config.h"
-#define SAVE_INTERMEDIATE
+
+#include <thread>
+//#define SAVE_INTERMEDIATE
 
 
 /*
@@ -31,6 +33,36 @@ Limiting to 300Km/hr reduces the compute size by a factor of 100.
 //const int flowSize = 2 * ceil((maxWindSpeed / kmPerPixel) * (period/60.0));// the number of pixels something can move at the max speed.
 
 
+
+void flowThread(grey2D8s* newMap, grey2D8s* oldMap, grey2D32s** flow, Radar* radar, Prediction* config, bool axis){
+    grey2D8s* kernel = allocate_grey2D8s(3,3);
+    //printf("Calculating X derivatives\n");
+    if(axis){
+        PrewittX(kernel);
+    }else{
+        PrewittY(kernel);
+    }
+
+    grey2D8s* newDx = derivative(newMap, kernel);
+    grey2D8s* oldDx = derivative(oldMap, kernel);
+#ifdef SAVE_INTERMEDIATE
+    if(axis){
+        printDerivative("newdx.png", newDx);
+        printDerivative("olddx.png", oldDx);
+    }else{
+        printDerivative("newdy.png", newDx);
+        printDerivative("olddy.png", oldDx);
+    }
+#endif
+    //4*width*height* [0-64]*[0-64] = 2^32
+    //printf("Correlating X derivatives\n");
+    *flow = correlate(newDx, oldDx, flowSize(radar, config));
+    //printf("Dropping X derivatives\n");
+    freeImage(newDx);
+    freeImage(oldDx);
+    freeImage(kernel);
+    //printf("Flow size is: %d, %d\n", (*flowx)->height, (*flowx)->width);
+}
 
 
 int main(int argc, char **argv)
@@ -51,11 +83,13 @@ int main(int argc, char **argv)
 
     readConf(filename, &config);
 
+/* 
     for(int i=0; i<nPaths; i++){
         printf("name = %s\n", paths[i].name);
         printf("lat = %g\n", paths[i].lat);
         printf("lon = %g\n", paths[i].lon);
     }
+*/
 
 
     //index the colours
@@ -69,52 +103,28 @@ int main(int argc, char **argv)
     printIndexed("oldColours.png", oldMap);    //convert to 8bit
 #endif
 
-    printf("Preparing a derivative kernel\n");
-    //calculate the X and Y derivatives of the image
-    //values 0-15 * kernel must not exceed +-127
-    grey2D8s* kernel = allocate_grey2D8s(3,3);
+    grey2D32s* flowx;
+    grey2D32s* flowy;
 
-    printf("Calculating X derivatives\n");
-    PrewittX(kernel);
-    grey2D8s* newDx = derivative(newMap, kernel);
-    grey2D8s* oldDx = derivative(oldMap, kernel);
-#ifdef SAVE_INTERMEDIATE
-    printDerivative("newdx.png", newDx);
-    printDerivative("olddx.png", oldDx);
-#endif
-    //4*width*height* [0-64]*[0-64] = 2^32
-    printf("Correlating X derivatives\n");
-    grey2D32s* flowx = correlate(newDx, oldDx, flowSize(&radar, &config));
-    printf("Dropping X derivatives\n");
-    freeImage(newDx);
-    freeImage(oldDx);
+    printf("Openning Flow X calcs as a seperate thread\n");
+    std::thread tFlowX (flowThread, newMap, oldMap, &flowx, &radar, &config, true);
+//    std::thread tFlowY (flowYThread, newMap, oldMap, &flowy, &radar, &config);
+    printf("Starting Flow Y calcs\n");
+    flowThread(newMap, oldMap, &flowy, &radar, &config, false);
 
-    printf("Flow size is: %d, %d\n", flowx->height, flowx->width);
-#ifdef SAVE_INTERMEDIATE
-    printFlow("Xflow.png", flowx);
-#endif
-    printf("Calculating Y derivatives\n");
-    PrewittY(kernel);
-    grey2D8s* newDy = derivative(newMap, kernel);
-    grey2D8s* oldDy = derivative(oldMap, kernel);
-#ifdef SAVE_INTERMEDIATE
-    printDerivative("newdy.png", newDy);
-    printDerivative("olddy.png", oldDy);
-#endif
-    printf("Correlating Y derivatives\n");
-    grey2D32s* flowy = correlate(newDy, oldDy, flowSize(&radar, &config));
-    printf("Dropping Y derivatives\n");
-    freeImage(newDy);
-    freeImage(oldDy);
-    freeImage(kernel);
+    tFlowX.join();
+    //tFlowY.join();
+
 #ifdef SAVE_INTERMEDIATE
     printFlow("Yflow.png", flowy);
+    printFlow("Xflow.png", flowx);
 #endif
 
-    printf("Combining derivatives\n");
+
+    //printf("Combining derivatives\n");
     //this is not an accurate probability map:
     grey2Dfl* flow = multiplyImages(squareImage(flowy), squareImage(flowx));
-    printf("Dropping Correlations\n");
+    //printf("Dropping Correlations\n");
     freeImage(flowy);
     freeImage(flowx);
 
@@ -150,19 +160,19 @@ int main(int argc, char **argv)
         freeImage(scaledFlow);
         //printf("normalized map integrates to %f\n", sumImage(normalizedflow));
 
-        printf("Calculating histograms\n");
+        //printf("Calculating histograms\n");
         
         for(int i = 0; i<nPaths; i++){
             
-            printf("select a row of histogram %d\n", i);
+            //printf("select a row of histogram %d\n", i);
             histoRow = histo[i]->row[t];
-            printf("histogram %d is %d by %d\n", i, histo[i]->width, histo[i]->height);
+            //printf("histogram %d is %d by %d\n", i, histo[i]->width, histo[i]->height);
             
             
-            printf("calculate map offset\n");
+            //printf("calculate map offset\n");
             int userX = mapXpx(paths[i].lat, paths[i].lon, &radar);
             int userY = mapYpx(paths[i].lat, paths[i].lon, &radar);
-            printf("Compute histogram\n");
+            //printf("Compute histogram\n");
             histogram(normalizedflow, newMap, userX, userY, histoRow);
             //histograms
             //uint16_t accumulator = 0;

@@ -26,7 +26,7 @@ struct Prediction
 //store the location of interest (change this to a moving target)
 struct Path
 {
-	char* name;
+	const char* name;
 	float lat;	//these can be turned into arrays.
 	float lon;	// not quite sure how best to treat them.
 };

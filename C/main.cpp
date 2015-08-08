@@ -19,7 +19,7 @@
 #include <png.h>
 #include "utilities.h"
 #include "config.h"
-//#define SAVE_INTERMEDIATE
+#define SAVE_INTERMEDIATE
 
 
 /*
@@ -35,15 +35,15 @@ Limiting to 300Km/hr reduces the compute size by a factor of 100.
 
 int main(int argc, char **argv)
 {
-    if (argc != 3){
-        abort_("Usage: program_name <old_file> <new_file> <file_out>");
+    if (argc != 4){
+        abort_("Usage: program_name <old_file> <new_file> <paths_file>");
     }
 
     Radar radar;
     int nPaths;
     Prediction config;
 
-    char* filename = "";
+    char* filename = argv[3];
 
     readSites(filename, &radar);
     Path* paths = readPaths(filename, &nPaths);
@@ -89,7 +89,10 @@ int main(int argc, char **argv)
     PrewittY(kernel);
     grey2D8s* newDy = derivative(newMap, kernel);
     grey2D8s* oldDy = derivative(oldMap, kernel);
-
+#ifdef SAVE_INTERMEDIATE
+    printDerivative("newdy.png", newDy);
+    printDerivative("olddy.png", oldDy);
+#endif
     printf("Correlating Y derivatives\n");
     grey2D32s* flowy = correlate(newDy, oldDy, flowSize(&radar, &config));
     printf("Dropping Y derivatives\n");

@@ -3,7 +3,7 @@
  * -Radar installation parameters (GPS location, Km/pix, measurement period)
  * -users' position(s)
  * Will try to use rapidJSON for web compatibility, may end up with another script sanitising the inputs. (string parsing in C. Bleh.)
- * 
+ *
  *
  *
  */
@@ -13,31 +13,98 @@
 //It might be worth using the time-stamp on the images for the period.
 
 #include "config.h"
-
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/filereadstream.h"
+#include <iostream>
+using namespace rapidjson;
 void readSites(char* filename, Radar* radar){
-	radar->range = 128;
-	radar->lat = -32.3917;	
-	radar->lon = 115.8669;	
-	radar->period = 10;
+
+	FILE* pFile = fopen(filename, "rb");
+	char buffer[65536];
+	FileReadStream is(pFile, buffer, sizeof(buffer));
+	Document document;
+	document.ParseStream<0, UTF8<>, FileReadStream>(is);
+
+	assert(document.HasMember("Site"));
+	const Value& site = document["Site"];
+	assert(site.IsObject());
+
+	assert(site.HasMember("range"));
+	assert(site.HasMember("Lat"));
+	assert(site.HasMember("Lon"));
+	assert(site.HasMember("period"));
+
+	assert(site["range"].IsDouble());
+	assert(site["Lat"].IsDouble());
+	assert(site["Lon"].IsDouble());
+	assert(site["period"].IsDouble());
+
+	radar->range = site["range"].GetDouble();
+	radar->lat = site["Lat"].GetDouble();
+	radar->lon = site["Lon"].GetDouble();
+	radar->period = site["period"].GetDouble();
 }
 
 Path* readPaths(char* filename, int* nPaths){
-	*nPaths = 2;
+
+	FILE* pFile = fopen(filename, "rb");
+	char buffer[65536];
+	FileReadStream is(pFile, buffer, sizeof(buffer));
+	Document document;
+	document.ParseStream<0, UTF8<>, FileReadStream>(is);
+
+	assert(document.HasMember("Paths"));
+	const Value& jsonPath = document["Paths"];
+	assert(jsonPath.IsArray());
+
+	*nPaths = jsonPath.Size();
 	Path* paths = (Path*) malloc(sizeof(Path) * *nPaths);
 	if(paths == NULL) abort_("Could not allocate Paths");
-	paths[0].name = "histogram.png";
-	paths[0].lat = -32.3;	
-	paths[0].lon = 116.1;	
-	paths[1].name = "histo2.png";
-	paths[1].lat = -32.3;	
-	paths[1].lon = 116.1;	
+	for(int i=0; i<*nPaths; i++){
+		assert(jsonPath[i].HasMember("name"));
+		assert(jsonPath[i].HasMember("Lat"));
+		assert(jsonPath[i].HasMember("Lon"));
+
+		assert(jsonPath[i]["name"].IsString());
+		assert(jsonPath[i]["Lat"].IsDouble());
+		assert(jsonPath[i]["Lon"].IsDouble());
+
+		paths[i].name = jsonPath[i]["name"].GetString();
+		paths[i].lat = jsonPath[i]["Lat"].GetDouble();
+		paths[i].lon = jsonPath[i]["Lon"].GetDouble();
+		//printf("name = %s\n", paths[0].name);
+		//printf("lat = %g\n", paths[0].lat);
+		//printf("lon = %g\n", paths[0].lon);
+	}
+
 	return paths;
 }
 
 void readConf(char* filename, Prediction* config){
-	config->stepcount = 30;	//minutes
-	config->stepPeriod = 1; //minute
-	config->maxSpeed = 150;	//km/h
+
+	FILE* pFile = fopen(filename, "rb");
+	char buffer[65536];
+	FileReadStream is(pFile, buffer, sizeof(buffer));
+	Document document;
+	document.ParseStream<0, UTF8<>, FileReadStream>(is);
+
+	assert(document.HasMember("Conf"));
+	const Value& conf = document["Conf"];
+	assert(conf.IsObject());
+	
+	assert(conf.HasMember("stepCount"));
+	assert(conf.HasMember("stepPeriod"));
+	assert(conf.HasMember("maxSpeed"));
+
+	assert(conf["stepCount"].IsUint());
+	assert(conf["stepPeriod"].IsUint());
+	assert(conf["maxSpeed"].IsDouble());
+
+	config->stepcount = conf["stepCount"].GetUint();	//minutes
+	config->stepPeriod = conf["stepPeriod"].GetUint(); //minute
+	config->maxSpeed = conf["maxSpeed"].GetDouble();	//km/h
 }
 
     //pixel location from lat/long

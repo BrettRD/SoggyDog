@@ -1,9 +1,26 @@
 {
 	"Paths":[
 		{
-			"name":"histogram",
+			"name":"histogram.png",
+			"Lat":-32.3,
+			"Lon":116.1
+		},
+		{
+			"name":"histo2.png",
 			"Lat":-32.3,
 			"Lon":116.1
 		}
-	]
+
+	],
+	"Site":{
+		"range":128.0,
+		"Lat":-32.3917,
+		"Lon":115.8669,
+		"period":10.0
+	},
+	"Conf":{
+		"stepCount":30,
+		"stepPeriod":1,
+		"maxSpeed":150.0
+	}
 }

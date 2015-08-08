@@ -46,7 +46,7 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
         if(greyimg->height < height) height = greyimg->height;
     }
     if(height<=0) {
-        printf("Oops! Computing histogram way out of bounds");
+        printf("Oops! Computing histogram way out of bounds\n");
         for(int bin=0;bin<nColours;bin++){
             outBins[bin] = 0;
         }

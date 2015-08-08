@@ -47,7 +47,15 @@ int main(int argc, char **argv)
 
     readSites(filename, &radar);
     Path* paths = readPaths(filename, &nPaths);
+
+
     readConf(filename, &config);
+
+    for(int i=0; i<nPaths; i++){
+        printf("name = %s\n", paths[i].name);
+        printf("lat = %g\n", paths[i].lat);
+        printf("lon = %g\n", paths[i].lon);
+    }
 
 
     //index the colours
@@ -172,6 +180,7 @@ int main(int argc, char **argv)
 
     //write_png_file(argv[2]);
     for(int i = 0; i<nPaths; i++){
+        printf("printing histogram %d, %s\n", i, paths[i].name);
         printHistogram(paths[i].name, histo[i]);
     }
 

@@ -2,6 +2,7 @@
 
 grey2D8u* rescale(grey2D8u* img, float mult, float offset){
     grey2D8u* outimg = allocate_grey2D8u(img->height, img->width);
+    if(outimg == NULL) return NULL;
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
             outimg->row[y][x] = (img->row[y][x]+offset)*(mult);
@@ -12,6 +13,7 @@ grey2D8u* rescale(grey2D8u* img, float mult, float offset){
 
 grey2D8s* rescale(grey2D8s* img, float mult, float offset){
     grey2D8s* outimg = allocate_grey2D8s(img->height, img->width);
+    if(outimg == NULL) return NULL;
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
             outimg->row[y][x] = ((float)(img->row[y][x])+offset)*(mult);
@@ -22,6 +24,7 @@ grey2D8s* rescale(grey2D8s* img, float mult, float offset){
 
 grey2D32s* rescale(grey2D32s* img, float mult, float offset){
     grey2D32s* outimg = allocate_grey2D32s(img->height, img->width);
+    if(outimg == NULL) return NULL;
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
             outimg->row[y][x] = ((float)(img->row[y][x])+offset)*(mult);
@@ -32,6 +35,7 @@ grey2D32s* rescale(grey2D32s* img, float mult, float offset){
 
 grey2Dfl* rescale(grey2Dfl* img, float mult, float offset){
     grey2Dfl* outimg = allocate_grey2Dfl(img->height, img->width);
+    if(outimg == NULL) return NULL;
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
             outimg->row[y][x] = (img->row[y][x]+offset)*(mult);
@@ -54,6 +58,7 @@ grey2Dfl* rescale(grey2Dfl* img, float mult, float offset){
 
 grey2D8u* flatten(grey2D8s* img){
     grey2D8u* outimg = allocate_grey2D8u(img->height, img->width);
+    if(outimg == NULL) return NULL;
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
             outimg->row[y][x] = (int)img->row[y][x]+128;
@@ -64,6 +69,7 @@ grey2D8u* flatten(grey2D8s* img){
 
 grey2D8u* flatten(grey2D32s* img){
     grey2D8u* outimg = allocate_grey2D8u(img->height, img->width);
+    if(outimg == NULL) return NULL;
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
             outimg->row[y][x] = 128 +((int32_t)(img->row[y][x])>>24);
@@ -74,6 +80,7 @@ grey2D8u* flatten(grey2D32s* img){
 
 grey2D8u* flatten(grey2Dfl* img){
     grey2D8u* outimg = allocate_grey2D8u(img->height, img->width);
+    if(outimg == NULL) return NULL;
     for(int y = 0; y<img->height; y++){
         for(int x=0;x<img->width; x++){
             outimg->row[y][x] = img->row[y][x]*255;

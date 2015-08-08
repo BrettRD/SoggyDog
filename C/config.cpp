@@ -71,12 +71,18 @@ Path* readPaths(char* filename, int* nPaths){
 		assert(jsonPath[i]["Lat"].IsDouble());
 		assert(jsonPath[i]["Lon"].IsDouble());
 
-		paths[i].name = jsonPath[i]["name"].GetString();
+		//paths[i].name = jsonPath[i]["name"].GetString();	//REALLY DOESN'T WORK!
+		const char* c = jsonPath[i]["name"].GetString();		//tmp value
+		paths[i].name = strcpy((char*)malloc(strlen(c)+1), c);
+		
 		paths[i].lat = jsonPath[i]["Lat"].GetDouble();
 		paths[i].lon = jsonPath[i]["Lon"].GetDouble();
-		//printf("name = %s\n", paths[0].name);
-		//printf("lat = %g\n", paths[0].lat);
-		//printf("lon = %g\n", paths[0].lon);
+
+		printf("name = %s\n", paths[i].name);
+
+
+		printf("lat = %g\n", paths[i].lat);
+		printf("lon = %g\n", paths[i].lon);
 	}
 
 	return paths;

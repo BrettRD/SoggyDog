@@ -94,13 +94,14 @@ int writeImage(const char* filename, grey2D8u* img)
 }
 int printHistogram(const char* name, grey2D8u* img){
 	//grey2D8u* flatmap;
-    grey2D8u* printable;
+//    grey2D8u* printable;
     //flatmap = flatten(img);    //convert to 8bit
-    printable = rescale(img, 1, 0);     //enhance the contrast
+//    printable = rescale(img, 1, 0);     //enhance the contrast	//duplicate image?
+//    if(printable == NULL)  abort_("could not allocate a printable image");
     //printable = rescale(img, 16, -128);     //enhance the contrast
     //freeImage(flatmap);
-    int retval = writeImage(name, printable);
-    freeImage(printable);
+    int retval = writeImage(name, /*printable*/ img);
+//    freeImage(printable);
     return retval;
 }
 
@@ -110,7 +111,9 @@ int printIndexed(const char* name, grey2D8s* img){
 	grey2D8u* flatmap;
     grey2D8u* printable;
     flatmap = flatten(img);    //convert to 8bit
+    if(flatmap == NULL)  abort_("could not allocate a flattened image");
     printable = rescale(flatmap, 16, -128);     //enhance the contrast
+    if(printable == NULL)  abort_("could not allocate a printable image");
     freeImage(flatmap);
     int retval = writeImage(name, printable);
     freeImage(printable);
@@ -122,7 +125,10 @@ int printDerivative(const char* name, grey2D8s* img){
     grey2D8u* printable;
 
     flatmap = flatten(img);    //convert to 8bit
+    if(flatmap == NULL)  abort_("could not allocate a flattened image");
     printable = rescale(flatmap, 1.5, -64);     //enhance the contrast
+    if(printable == NULL)  abort_("could not allocate a printable image");
+
     freeImage(flatmap);
     int retval = writeImage(name, printable);
     freeImage(printable);
@@ -141,9 +147,13 @@ int printFlow(const char* name, grey2D32s* img){
     //printf("begin image rescale\n");
     
     enhanced = rescale(img, mult, offset);     //enhance the contrast
+    if(enhanced == NULL)  abort_("could not allocate a printable image");
+
     //printf("Flow extrema are: %d, %d\n", max(enhanced), min(enhanced));
     
     printable = flatten(enhanced);    //convert to 8bit
+    if(printable == NULL)  abort_("could not allocate a printable image");
+
     freeImage(enhanced);
     int retval = writeImage(name, printable);
     freeImage(printable);
@@ -163,9 +173,13 @@ int printFlow(const char* name, grey2Dfl* img){
     //printf("begin image rescale\n");
     
     enhanced = rescale(img, mult, offset);     //enhance the contrast
+    if(enhanced == NULL)  abort_("could not allocate a printable image");
+
     //printf("Flow extrema are: %d, %d\n", max(enhanced), min(enhanced));
     
     printable = flatten(enhanced);    //convert to 8bit
+    if(printable == NULL)  abort_("could not allocate a printable image");
+
     freeImage(enhanced);
     int retval = writeImage(name, printable);
     freeImage(printable);

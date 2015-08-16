@@ -95,9 +95,9 @@ int main(int argc, char **argv)
     //index the colours
     //values 0-15
     printf("Indexing colours\n");
-    grey2D8s* newMap = index_colours(argv[1]);
-    grey2D8s* oldMap = index_colours(argv[2]);
-    
+    grey2D8s* oldMap = index_colours(argv[1]);
+    grey2D8s* newMap = index_colours(argv[2]);
+
 #ifdef SAVE_INTERMEDIATE
     printIndexed("newColours.png", newMap);    //convert to 8bit
     printIndexed("oldColours.png", oldMap);    //convert to 8bit
@@ -128,8 +128,10 @@ int main(int argc, char **argv)
     freeImage(flowy);
     freeImage(flowx);
 
+#ifdef SAVE_INTERMEDIATE
     //The full flow image the hard to compute, and we can use it later to re-compute histograms
     printFlow("Fullflow.png", flow);
+#endif
 
     printf("Preparing %d histograms\n", nPaths);
 

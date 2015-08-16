@@ -63,16 +63,16 @@ Path* readPaths(char* filename, int* nPaths){
 	Path* paths = (Path*) malloc(sizeof(Path) * *nPaths);
 	if(paths == NULL) abort_("Could not allocate Paths");
 	for(int i=0; i<*nPaths; i++){
-		assert(jsonPath[i].HasMember("name"));
+		assert(jsonPath[i].HasMember("OutFile"));
 		assert(jsonPath[i].HasMember("Lat"));
 		assert(jsonPath[i].HasMember("Lon"));
 
-		assert(jsonPath[i]["name"].IsString());
+		assert(jsonPath[i]["OutFile"].IsString());
 		assert(jsonPath[i]["Lat"].IsNumber());
 		assert(jsonPath[i]["Lon"].IsNumber());
 
 		//paths[i].name = jsonPath[i]["name"].GetString();	//REALLY DOESN'T WORK!
-		const char* c = jsonPath[i]["name"].GetString();		//tmp value
+		const char* c = jsonPath[i]["OutFile"].GetString();		//tmp value
 		paths[i].name = strcpy((char*)malloc(strlen(c)+1), c);
 		
 		paths[i].lat = jsonPath[i]["Lat"].GetDouble();

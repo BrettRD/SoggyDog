@@ -174,6 +174,8 @@ int main(int argc, char **argv)
             //printf("calculate map offset\n");
             int userX = mapXpx(paths[i].lat, paths[i].lon, &radar);
             int userY = mapYpx(paths[i].lat, paths[i].lon, &radar);
+            printf("using map offset %d, %d\n", userX, userY);
+
             //printf("Compute histogram\n");
             histogram(normalizedflow, newMap, userX, userY, histoRow);
             //histograms

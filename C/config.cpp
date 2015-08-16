@@ -118,7 +118,7 @@ int mapXpx(float lat, float lon, Radar* radar){
     //return (kmPerDeg * (lon-mapLon)* cos(lat*0.0174532)) / kmPerPixel;
 }
 int mapYpx(float lat, float lon, Radar* radar){
-    return (kmPerDeg * (lat-radar->lat)) / kmPerPixel(radar->range);
+    return (kmPerDeg * (radar->lat-lat)) / kmPerPixel(radar->range);
 }
 float kmPerPixel(float range){
 	return range / 256;	//see IDR.loop.v12.0.js line 1168

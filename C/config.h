@@ -40,6 +40,7 @@ struct Radar
 	float lat;
 	float lon;
 	float period;
+	const char* flowfile;
 //serpentine
 //float range = 128;  //the range of the image 
 //float mapLat = -32.3917;	//latitude of the map centre
@@ -71,7 +72,7 @@ function getMapX(lon, xKm, yKm, mapy) {
 
 //int steps = 30;//the number of steps in the histogram (in minutes)
 
-const float maxWindSpeed = 150;  //km per hour
+const float maxWindSpeed = 300;  //km per hour
 
 int flowSize(Radar* radar, Prediction* config);
 

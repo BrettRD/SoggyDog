@@ -35,16 +35,20 @@ void readSites(char* filename, Radar* radar){
 	assert(site.HasMember("Lat"));
 	assert(site.HasMember("Lon"));
 	assert(site.HasMember("period"));
+	assert(site.HasMember("FlowFile"));
 
 	assert(site["range"].IsNumber());
 	assert(site["Lat"].IsNumber());
 	assert(site["Lon"].IsNumber());
 	assert(site["period"].IsNumber());
+	assert(site["FlowFile"].IsString());
 
 	radar->range = site["range"].GetDouble();
 	radar->lat = site["Lat"].GetDouble();
 	radar->lon = site["Lon"].GetDouble();
 	radar->period = site["period"].GetDouble();
+	const char* c = site["FlowFile"].GetString();		//tmp value
+	radar->flowfile = strcpy((char*)malloc(strlen(c)+1), c);
 }
 
 Path* readPaths(char* filename, int* nPaths){

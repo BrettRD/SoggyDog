@@ -107,14 +107,13 @@ int main(int argc, char **argv)
     grey2D32s* flowy;
 
     printf("Openning Flow X calcs as a seperate thread\n");
-    std::thread tFlowX (flowThread, newMap, oldMap, &flowx, &radar, &config, true);
+    std::thread tFlowX (flowThread, oldMap, newMap, &flowx, &radar, &config, true);
 //    std::thread tFlowY (flowYThread, newMap, oldMap, &flowy, &radar, &config);
     printf("Starting Flow Y calcs\n");
-    flowThread(newMap, oldMap, &flowy, &radar, &config, false);
+    flowThread(oldMap, newMap, &flowy, &radar, &config, false);
 
     tFlowX.join();
     //tFlowY.join();
-
 #ifdef SAVE_INTERMEDIATE
     printFlow("Yflow.png", flowy);
     printFlow("Xflow.png", flowx);
@@ -128,10 +127,11 @@ int main(int argc, char **argv)
     freeImage(flowy);
     freeImage(flowx);
 
-#ifdef SAVE_INTERMEDIATE
-    //The full flow image the hard to compute, and we can use it later to re-compute histograms
-    printFlow("Fullflow.png", flow);
-#endif
+//#ifdef SAVE_INTERMEDIATE
+    //The full flow image is the hardest to compute, and we can use it later to re-compute histograms
+//    printFlow("/var/www/predictions/Fullflow.png", flow);
+    printFlow(radar.flowfile, flow);
+//#endif
 
     printf("Preparing %d histograms\n", nPaths);
 

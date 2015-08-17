@@ -120,9 +120,9 @@ void histogram(grey2Dfl* greyimg, grey2D8s* binimg, int offx, int offy, uint8_t*
         //free(tmpRow[bin]);
     }
     //distribute the uncertainty among the bins
-    for(int bin=0;bin<nColours;bin++){
-        outBins[bin] -= histogramTotal/nColours;
-    }
+//    for(int bin=0;bin<nColours;bin++){
+//        outBins[bin] -= histogramTotal/nColours;
+//    }
 
 
 

@@ -30,14 +30,14 @@ void histogram(grey2Dfl* scaledFlow, grey2D8s* newMap, int x, int y, uint8_t* bi
 
 //squares every element of an image, (in place operation)
 grey2D32s* squareImage(grey2D32s* img);
-
+grey2Dfl* squareImage(grey2Dfl* img);
 //element by element multipication of two images
 grey2Dfl* multiplyImages(grey2D32s* imgA, grey2D32s* imgB);
-
+grey2Dfl* multiplyImages(grey2Dfl* imgA, grey2Dfl* imgB);
 //scale an image (linear interpolation)
 grey2Dfl* scaleImage(grey2Dfl* flow, float scale);
 
-
+grey2Dfl* floatImage(grey2D32s* img);
 
 
 //from the libPNG example

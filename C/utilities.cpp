@@ -77,6 +77,16 @@ grey2D32s* squareImage(grey2D32s* img){
     }
     return img;
 }
+//squares every element of an image, (in place operation)
+grey2Dfl* squareImage(grey2Dfl* img){
+    //printf("Square an image\n");
+    for(int x=0; x< img->width; x++){
+        for(int y=0; y< img->height; y++){
+            img->row[y][x] = img->row[y][x] * img->row[y][x];
+        }
+    }
+    return img;
+}
 
 //element by element multipication of two images
 grey2Dfl* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
@@ -93,7 +103,33 @@ grey2Dfl* multiplyImages(grey2D32s* imgA, grey2D32s* imgB){
     }
     return imgC;
 }
+//element by element multipication of two images
+grey2Dfl* multiplyImages(grey2Dfl* imgA, grey2Dfl* imgB){
+    //printf("Multiply some images\n");
+    if((imgA->height != imgB->height) || (imgA->width != imgB->width) ){
+        abort_("Error: attempting to multiply elements of different sized images");
+    }
+    grey2Dfl* imgC = allocate_grey2Dfl(imgA->height, imgA->width);
 
+    for(int y=0; y< imgC->height; y++){
+        for(int x=0; x< imgC->width; x++){
+            imgC->row[y][x] = imgA->row[y][x] * imgB->row[y][x];
+        }
+    }
+    return imgC;
+}
+
+grey2Dfl* floatImage(grey2D32s* img){
+    grey2Dfl* outImg = allocate_grey2Dfl(img->height, img->width);
+    for(int x=0; x< img->width; x++){
+        for(int y=0; y< img->height; y++){
+            outImg->row[y][x] = (float)img->row[y][x];
+        }
+    }
+    return outImg;
+
+
+}
 
 //scale an image (linear interpolation)
 //it may be worth adding arguments to crop the final scaled image to a given maximum size.

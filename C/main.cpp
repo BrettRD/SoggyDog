@@ -122,10 +122,14 @@ int main(int argc, char **argv)
 
     //printf("Combining derivatives\n");
     //this is not an accurate probability map:
-    grey2Dfl* flow = multiplyImages(squareImage(flowy), squareImage(flowx));
+    grey2Dfl* flflowy = floatImage(flowy);
+    grey2Dfl* flflowx = floatImage(flowx);
+    grey2Dfl* flow = multiplyImages(squareImage(flflowy), squareImage(flflowx));
     //printf("Dropping Correlations\n");
     freeImage(flowy);
     freeImage(flowx);
+    freeImage(flflowy);
+    freeImage(flflowx);
 
 //#ifdef SAVE_INTERMEDIATE
     //The full flow image is the hardest to compute, and we can use it later to re-compute histograms

@@ -121,7 +121,10 @@ int main(int argc, char **argv)
 
 
     //printf("Combining derivatives\n");
-    //this is not an accurate probability map:
+    //This algorithm is not an accurate probability map.
+    //It makes peaks that are too sharp and leaves a bunch of artefacts
+
+    //convert to float, preventing overflow in dynamically sized images was bad for my sanity.
     grey2Dfl* flflowy = floatImage(flowy);
     grey2Dfl* flflowx = floatImage(flowx);
     grey2Dfl* flow = multiplyImages(squareImage(flflowy), squareImage(flflowx));

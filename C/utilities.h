@@ -39,7 +39,7 @@ grey2Dfl* scaleImage(grey2Dfl* flow, float scale);
 
 grey2Dfl* floatImage(grey2D32s* img);
 
-
+grey2D8u* transpose(grey2D8u* img);
 //from the libPNG example
 void abort_(const char * s, ...);
 #endif

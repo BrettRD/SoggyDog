@@ -100,7 +100,9 @@ int printHistogram(const char* name, grey2D8u* img){
 //    if(printable == NULL)  abort_("could not allocate a printable image");
     //printable = rescale(img, 16, -128);     //enhance the contrast
     //freeImage(flatmap);
-    int retval = writeImage(name, /*printable*/ img);
+    grey2D8u* transImg = transpose(img);
+    int retval = writeImage(name, /*printable*/ transImg);
+    freeImage(transImg);
 //    freeImage(printable);
     return retval;
 }

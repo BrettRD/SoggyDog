@@ -127,8 +127,6 @@ grey2Dfl* floatImage(grey2D32s* img){
         }
     }
     return outImg;
-
-
 }
 
 //scale an image (linear interpolation)
@@ -176,3 +174,13 @@ grey2Dfl* scaleImage(grey2Dfl* flow, float scale){
     return scflow;
 }
 
+//transpose an image.
+grey2D8u* transpose(grey2D8u* img){
+    grey2D8u* outImg = allocate_grey2D8u(img->width, img->height);
+    for(int x=0; x< img->width; x++){
+        for(int y=0; y< img->height; y++){
+            outImg->row[x][y] = img->row[y][x];
+        }
+    }
+    return outImg;
+}

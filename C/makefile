@@ -17,7 +17,7 @@ dotproduct.o: dotproduct.cpp
 correlate.o: correlate.cpp
 	g++ -g -c correlate.cpp
 
-utilities.o: utilities.cpp
+utilities.o: utilities.cpp utilities.h
 	g++ -g -c utilities.cpp
 
 indexer.o: indexer.cpp
@@ -29,7 +29,7 @@ histogram.o: histogram.cpp
 converters.o: converters.cpp
 	g++ -g -c converters.cpp	
 
-writeImage.o: writeImage.cpp
+writeImage.o: writeImage.cpp writeImage.h utilities.o
 	g++ -g -c writeImage.cpp	
 
 config.o: config.cpp

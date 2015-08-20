@@ -184,3 +184,13 @@ grey2D8u* transpose(grey2D8u* img){
     }
     return outImg;
 }
+
+//flip an image about its Y axis. (in place operation)
+grey2D8u* flipY(grey2D8u* img){
+    for(int y=0; y< img->height / 2; y++){
+        uint8_t* tmp = img->row[y];
+        img->row[y] = img->row[img->height - (y+1)];
+        img->row[img->height - (y+1)] = tmp;
+    }
+    return img;
+}

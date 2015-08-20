@@ -101,6 +101,7 @@ int printHistogram(const char* name, grey2D8u* img){
     //printable = rescale(img, 16, -128);     //enhance the contrast
     //freeImage(flatmap);
     grey2D8u* transImg = transpose(img);
+    flipY(transImg);	//in-place operation
     int retval = writeImage(name, /*printable*/ transImg);
     freeImage(transImg);
 //    freeImage(printable);
